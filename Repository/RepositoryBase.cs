@@ -18,7 +18,7 @@ namespace Repository
         public IQueryable<T> FindAll(bool trackChanges) => !trackChanges ?
             RepositoryContext.Set<T>().AsNoTracking() : RepositoryContext.Set<T>();
 
-        public IQueryable<T> FindeByCondition(Expression<Func<T,bool>> expression,bool trackChanges)=>
+        public IQueryable<T> FindByCondition(Expression<Func<T,bool>> expression,bool trackChanges)=>
             !trackChanges ? RepositoryContext.Set<T>().Where(expression).AsNoTracking() 
             : RepositoryContext.Set<T>().Where(expression);
         public void Create(T entity)=>RepositoryContext.Set<T>().Add(entity);
