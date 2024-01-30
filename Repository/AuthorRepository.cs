@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
+    // repository user class
     public class AuthorRepository:RepositoryBase<Author>,IAuthorRepository
     {
         public AuthorRepository(RepositoryContext repositoryContext):base(repositoryContext)
