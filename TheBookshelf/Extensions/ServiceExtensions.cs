@@ -1,6 +1,8 @@
 ﻿using Interfaces;
 using LoggerService;
 using Repository;
+using Service;
+using Service.Interfaces;
 
 namespace TheBookshelf.Extensions
 {
@@ -23,5 +25,8 @@ namespace TheBookshelf.Extensions
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+        public static void ConfigureServiceManager(this IServiceCollection services) =>
+            services.AddScoped<IServiceManager, ServiceManager>();
     }
 }
