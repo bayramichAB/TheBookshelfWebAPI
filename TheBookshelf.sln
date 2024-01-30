@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Interfaces", "Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{523BB5C8-44FD-4370-AE99-9F6E3CD7A058}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheBookshelf.Presentation", "TheBookshelf.Presentation\TheBookshelf.Presentation.csproj", "{75F6D2AC-43E2-48AA-A678-05AD9D7B860E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{523BB5C8-44FD-4370-AE99-9F6E3CD7A058}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{523BB5C8-44FD-4370-AE99-9F6E3CD7A058}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{523BB5C8-44FD-4370-AE99-9F6E3CD7A058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F6D2AC-43E2-48AA-A678-05AD9D7B860E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F6D2AC-43E2-48AA-A678-05AD9D7B860E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F6D2AC-43E2-48AA-A678-05AD9D7B860E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F6D2AC-43E2-48AA-A678-05AD9D7B860E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
