@@ -16,6 +16,6 @@ namespace Entities.Models
         [Required(ErrorMessage = "Please enter a Category name")]
         public string? Name { get; set; }
 
-        ICollection<Book>? Books { get; set; }
+        public ICollection<Book>? Books { get; set; }
     }
 }

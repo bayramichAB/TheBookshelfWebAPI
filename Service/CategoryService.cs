@@ -1,6 +1,6 @@
-﻿using Entities.Models;
-using Interfaces;
+﻿using Interfaces;
 using Service.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +19,15 @@ namespace Service
             _logger = logger;
         }
 
-        public IEnumerable<Category> GetAllCategories(bool trackChanges)
+        public IEnumerable<CategoryDto> GetAllCategories(bool trackChanges)
         {
             try
             {
                 var categories = _repository.Category.GetAllCategories(trackChanges);
-                return categories;
+
+                var categoriesDto=categories.Select(c=>new CategoryDto(c.Id,c.Name ?? "")).ToList();
+                
+                return categoriesDto;
             }
             catch (Exception ex)
             {

@@ -19,6 +19,6 @@ namespace Entities.Models
         [Required(ErrorMessage = "Please enter a Author's bio")]
         public string? Biography { get; set; }
 
-        ICollection<Book>? Books { get; set; }
+        public ICollection<Book>? Books { get; set; }
     }
 }

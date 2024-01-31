@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace Service.Interfaces
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> GetAllCategories(bool trackChanges);
+        IEnumerable<CategoryDto> GetAllCategories(bool trackChanges);
     }
 }
