@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using AutoMapper;
+using Interfaces;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace Service
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
+        private readonly IMapper _mapper;
 
-        public BookService(IRepositoryManager repository,ILoggerManager logger)
+        public BookService(IRepositoryManager repository,ILoggerManager logger,IMapper mapper)
         {
             _repositoryManager = repository;
             _loggerManager = logger;
+            _mapper = mapper;
         }
     }
 }

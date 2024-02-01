@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using AutoMapper;
+using Interfaces;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -13,10 +14,12 @@ namespace Service
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
-        public CategoryService(IRepositoryManager repository,ILoggerManager logger)
+        private readonly IMapper _mapper;
+        public CategoryService(IRepositoryManager repository,ILoggerManager logger,IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public IEnumerable<CategoryDto> GetAllCategories(bool trackChanges)
@@ -25,7 +28,7 @@ namespace Service
             {
                 var categories = _repository.Category.GetAllCategories(trackChanges);
 
-                var categoriesDto=categories.Select(c=>new CategoryDto(c.Id,c.Name ?? "")).ToList();
+                var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
                 
                 return categoriesDto;
             }

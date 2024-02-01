@@ -15,6 +15,7 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(Program));
 
 /*Without this code, our API wouldn’t work, and wouldn’t know where to route incoming requests. 
  *But now, our app will find all of the controllers inside of the Presentation project and 
