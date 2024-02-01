@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace TheBookshelf.Presentation.Controllers
 {
@@ -18,15 +14,10 @@ namespace TheBookshelf.Presentation.Controllers
         [HttpGet]
         public IActionResult GetCategories()
         {
-            try 
-            {
-                var categories = _service.CategoryService.GetAllCategories(trackChanges: false);
-                return Ok(categories);
-            }
-            catch 
-            {
-                return StatusCode(500,"Internal server error");
-            }
+            throw new Exception("Exception");
+
+            var categories = _service.CategoryService.GetAllCategories(trackChanges: false);
+            return Ok(categories);
         }
     }
 }
