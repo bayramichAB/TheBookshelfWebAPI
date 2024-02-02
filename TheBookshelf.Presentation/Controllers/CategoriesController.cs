@@ -14,10 +14,15 @@ namespace TheBookshelf.Presentation.Controllers
         [HttpGet]
         public IActionResult GetCategories()
         {
-            throw new Exception("Exception");
-
             var categories = _service.CategoryService.GetAllCategories(trackChanges: false);
             return Ok(categories);
+        }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetCategory(Guid id)
+        {
+            var category = _service.CategoryService.GetCategory(id,trackChanges:false);
+            return Ok(category);
         }
     }
 }
