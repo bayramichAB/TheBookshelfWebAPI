@@ -9,6 +9,7 @@ namespace TheBookshelf
         public MappingProfile()
         {
             CreateMap<Category, CategoryDto>();
+            CreateMap<Book, BookDto>();
         }
     }
 }

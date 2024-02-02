@@ -14,5 +14,8 @@ namespace Repository
         {
 
         }
+
+        public IEnumerable<Book> GetBooks(Guid categoryId, bool trackChanges) =>
+            FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b=>b.Name).ToList();
     }
 }
