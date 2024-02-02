@@ -10,5 +10,6 @@ namespace Interfaces
     public interface IBookRepository
     {
         IEnumerable<Book> GetBooks(Guid bookId, bool trackChanges);
+        Book? GetBook(Guid categoryId, Guid bookId, bool trackChanges);
     }
 }

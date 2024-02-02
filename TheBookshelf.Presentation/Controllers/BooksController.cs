@@ -16,10 +16,17 @@ namespace TheBookshelf.Presentation.Controllers
         public BooksController(IServiceManager service)=>_service = service;
 
         [HttpGet]
-        public IActionResult GetBookForCategory(Guid categoryId)
+        public IActionResult GetBooksForCategory(Guid categoryId)
         {
             var books = _service.BookService.GetBooks(categoryId,trackChanges:false);
             return Ok(books);
+        }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetBookForCategory(Guid categoryId, Guid Id)
+        {
+            var book = _service.BookService.GetBook(categoryId, Id, trackChanges:false);
+            return Ok(book);
         }
     }
 }

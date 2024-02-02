@@ -24,6 +24,25 @@ namespace Service
             _mapper = mapper;
         }
 
+        public BookDto GetBook(Guid categoryId, Guid Id, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
+
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var book = _repositoryManager.Book.GetBook(categoryId, Id,trackChanges);
+
+            if (book is null)
+            {
+                throw new BookNotFoundException(Id);
+            }
+            var booksDto= _mapper.Map<BookDto>(book);
+            return booksDto;
+        }
+
         public IEnumerable<BookDto> GetBooks(Guid categoryId, bool trackChanges)
         {
             var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
@@ -37,5 +56,7 @@ namespace Service
 
             return booksDto;
         }
+
+
     }
 }
