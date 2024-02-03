@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
@@ -22,7 +23,18 @@ namespace Service
             _logger = logger;
             _mapper = mapper;
         }
-                                                                
+
+        public CategoryDto CreateCategory(CategoryForCreationDto category)
+        {
+            var categoryEntity = _mapper.Map<Category>(category);
+
+            _repository.Category.CreateCategory(categoryEntity);
+            _repository.Save();
+
+            var categoryToReturn = _mapper.Map<CategoryDto>(categoryEntity);
+            return categoryToReturn;
+        }
+
         public IEnumerable<CategoryDto> GetAllCategories(bool trackChanges)
         {
             var categories = _repository.Category.GetAllCategories(trackChanges);

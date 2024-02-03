@@ -11,6 +11,8 @@ namespace TheBookshelf
             CreateMap<Category, CategoryDto>();
             CreateMap<Book, BookDto>();
             CreateMap<Author, AuthorDto>();
+
+            CreateMap<CategoryForCreationDto, Category>();
         }
     }
 }

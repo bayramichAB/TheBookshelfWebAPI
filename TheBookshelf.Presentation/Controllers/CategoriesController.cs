@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Shared.DataTransferObjects;
 
 
 namespace TheBookshelf.Presentation.Controllers
@@ -18,11 +19,25 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}",Name ="CategoryById")]
         public IActionResult GetCategory(Guid id)
         {
             var category = _service.CategoryService.GetCategory(id,trackChanges:false);
             return Ok(category);
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateCategory([FromBody] CategoryForCreationDto category)
+        {
+            if (category is null)
+            {
+                return BadRequest("CategoryForCreationDto object is null");
+            }
+
+            var createdCategory = _service.CategoryService.CreateCategory(category);
+
+            return CreatedAtRoute("CategoryById",new {id=createdCategory.Id},createdCategory);
         }
     }
 }
