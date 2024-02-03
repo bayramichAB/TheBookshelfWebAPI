@@ -22,7 +22,7 @@ namespace Service
             _logger = logger;
             _mapper = mapper;
         }
-
+                                                                
         public IEnumerable<CategoryDto> GetAllCategories(bool trackChanges)
         {
             var categories = _repository.Category.GetAllCategories(trackChanges);

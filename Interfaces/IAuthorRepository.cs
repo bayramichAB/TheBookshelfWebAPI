@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Interfaces
 {
     public interface IAuthorRepository
     {
+        IEnumerable<Author> GetAllAuthors(bool trackChanges);
+        Author? GetAuthor(Guid authorId, bool trachChanges);
     }
 }

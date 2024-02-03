@@ -15,5 +15,11 @@ namespace Repository
         {
 
         }
+
+        public IEnumerable<Author> GetAllAuthors(bool trackChanges) =>
+            FindAll(trackChanges).OrderBy(a => a.Name).ToList();
+
+        public Author? GetAuthor(Guid authorId, bool trachChanges) =>
+            FindByCondition(a => a.Id.Equals(authorId), trachChanges).SingleOrDefault();
     }
 }

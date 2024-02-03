@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.DataTransferObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Service.Interfaces
 {
     public interface IAuthorService
     {
+        IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges);
+        AuthorDto GetAuthor(Guid Id, bool trackChanges);
     }
 }

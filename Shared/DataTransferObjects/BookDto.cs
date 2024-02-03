@@ -13,5 +13,6 @@ namespace Shared.DataTransferObjects
         bool Available,
         string Pages,
         DateTime Date,
-        string Description);
+        string Description
+    );
 }
