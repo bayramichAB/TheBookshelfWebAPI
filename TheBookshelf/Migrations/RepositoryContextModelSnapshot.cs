@@ -123,8 +123,7 @@ namespace TheBookshelf.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pages")
                         .IsRequired()
@@ -249,6 +248,18 @@ namespace TheBookshelf.Migrations
                             Name = "The Ultimate Unofficial Encyclopedia for Minecrafters",
                             Pages = "176",
                             Price = 17.45m
+                        },
+                        new
+                        {
+                            Id = new Guid("83324322-e74d-438f-a3d2-a774443cc45c"),
+                            AuthorID = new Guid("bdb52009-176e-49bc-9754-e7c9d987609f"),
+                            Available = true,
+                            CategoryID = new Guid("45d25e0e-54ba-404f-840c-50e58573857a"),
+                            Date = new DateTime(2015, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "T-SQL insiders help you tackle your toughest queries and query-tuning problems\r\nSqueeze maximum performance and efficiency from every T-SQL query you write or tune. Four leading experts take an in-depth look at T-SQL’s internal architecture and offer advanced practical techniques for optimizing response time and resource usage. Emphasizing a correct understanding of the language and its foundations, the authors present unique solutions they have spent years developing and refining. All code and techniques are fully updated to reflect new T-SQL enhancements in Microsoft SQL Server 2014 and SQL Server 2012.",
+                            Name = "T-SQL Querying (Developer Reference) 1st Edition, Kindle Edition",
+                            Pages = "2974",
+                            Price = 35.99m
                         });
                 });
 
@@ -298,11 +309,11 @@ namespace TheBookshelf.Migrations
             modelBuilder.Entity("Entities.Models.Book", b =>
                 {
                     b.HasOne("Entities.Models.Author", "Author")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("AuthorID");
 
                     b.HasOne("Entities.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -310,6 +321,16 @@ namespace TheBookshelf.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Entities.Models.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Entities.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,6 +24,38 @@ namespace Service
             _mapper = mapper;
         }
 
+        public BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges)
+        {
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var book = _repositoryManager.Book.GetAuthorBook(authorId, Id, trackChanges);
+
+            if (book is null)
+            {
+                throw new BookNotFoundException(Id);
+            }
+
+            var bookDto=_mapper.Map<BookDto>(book);
+            return bookDto;
+        }
+
+        public IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges)
+        {
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var books = _repositoryManager.Book.GetAuthorBooks(authorId, trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
+            return booksDto;
+        }
+
         public BookDto GetBook(Guid categoryId, Guid Id, bool trackChanges)
         {
             var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);

@@ -130,20 +130,20 @@ namespace Repository.Configuration
                     Description = "By New York Times bestselling author and Minecraft expert, Megan Miller, a full-color book full of practical advice that boys and girls will refer to again and again!",
                     CategoryID=new Guid("45d25e0e-54ba-404f-840c-50e58573857a"),
                     AuthorID = new Guid("b91a67df-7836-4892-8c13-a3a050a8352d")
-                }
+                },
 
-                /*new Book
+                new Book
                 {
-                    Id = new Guid("fce94586-a29f-49d5-bff3-7f22ceb306de"),
+                    Id = new Guid("83324322-e74d-438f-a3d2-a774443cc45c"),
                     Name = "T-SQL Querying (Developer Reference) 1st Edition, Kindle Edition",
                     Price = 35.99m,
                     Available = true,
                     Pages = "2974",
                     Date = new DateTime(2015, 02, 17),
                     Description = "T-SQL insiders help you tackle your toughest queries and query-tuning problems\r\nSqueeze maximum performance and efficiency from every T-SQL query you write or tune. Four leading experts take an in-depth look at T-SQL’s internal architecture and offer advanced practical techniques for optimizing response time and resource usage. Emphasizing a correct understanding of the language and its foundations, the authors present unique solutions they have spent years developing and refining. All code and techniques are fully updated to reflect new T-SQL enhancements in Microsoft SQL Server 2014 and SQL Server 2012.",
-                    CategoryID=new Guid("45d25e0e-54ba-404f-840c-50e58573857a"),
+                    CategoryID = new Guid("45d25e0e-54ba-404f-840c-50e58573857a"),
                     AuthorID = new Guid("bdb52009-176e-49bc-9754-e7c9d987609f")
-                }*/
+                }
                 );
         }
     }

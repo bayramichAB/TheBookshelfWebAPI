@@ -15,6 +15,12 @@ namespace Repository
 
         }
 
+        public Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges) =>
+            FindByCondition(a => a.AuthorID.Equals(authorId) && a.Id.Equals(bookId), trackChanges).SingleOrDefault();
+
+        public IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges) =>
+            FindByCondition(a => a.AuthorID.Equals(authorId), trackChanges).OrderBy(a => a.Name).ToList();
+
         public Book? GetBook(Guid categoryId, Guid Id, bool trackChanges) =>
             FindByCondition(b => b.CategoryID.Equals(categoryId) && b.Id.Equals(Id), trackChanges).SingleOrDefault();
 

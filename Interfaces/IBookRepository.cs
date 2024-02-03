@@ -9,7 +9,10 @@ namespace Interfaces
 {
     public interface IBookRepository
     {
-        IEnumerable<Book> GetBooks(Guid bookId, bool trackChanges);
+        IEnumerable<Book> GetBooks(Guid categoryId, bool trackChanges);
         Book? GetBook(Guid categoryId, Guid bookId, bool trackChanges);
+        Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges);
+
+        IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges);
     }
 }
