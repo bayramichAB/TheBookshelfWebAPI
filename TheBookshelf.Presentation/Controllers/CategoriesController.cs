@@ -37,7 +37,7 @@ namespace TheBookshelf.Presentation.Controllers
 
             var createdCategory = _service.CategoryService.CreateCategory(category);
 
-            return CreatedAtRoute("CategoryById",new {id=createdCategory.Id},createdCategory);
+            return CreatedAtRoute("CategoryById", new {id=createdCategory.Id},createdCategory);
         }
     }
 }
