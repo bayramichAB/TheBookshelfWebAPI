@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
@@ -22,6 +23,23 @@ namespace Service
             _repositoryManager = repository;
             _loggerManager = logger;
             _mapper = mapper;
+        }
+
+        public BookDto CreateBook(Guid categoryId, BookForCreationDto bookForCreation, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var bookEntity = _mapper.Map<Book>(bookForCreation);
+
+            _repositoryManager.Book.CreateBook(categoryId,bookEntity);
+            _repositoryManager.Save();
+
+            var bookToReturn = _mapper.Map<BookDto>(bookEntity);
+            return bookToReturn;
         }
 
         public BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges)

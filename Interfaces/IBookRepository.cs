@@ -14,5 +14,6 @@ namespace Interfaces
         Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges);
 
         IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges);
+        void CreateBook(Guid categoryId,Book book);
     }
 }

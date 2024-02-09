@@ -13,5 +13,7 @@ namespace Service.Interfaces
         IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges);
         BookDto GetBook(Guid categoryId, Guid Id, bool trackChanges);
         BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges);
+
+        BookDto CreateBook(Guid categoryId, BookForCreationDto bookForCreation, bool trackChanges);
     }
 }

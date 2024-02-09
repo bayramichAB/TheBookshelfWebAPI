@@ -15,6 +15,12 @@ namespace Repository
 
         }
 
+        public void CreateBook(Guid categoryId, Book book)
+        {
+            book.CategoryID = categoryId;
+            Create(book);
+        }
+
         public Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges) =>
             FindByCondition(a => a.AuthorID.Equals(authorId) && a.Id.Equals(bookId), trackChanges).SingleOrDefault();
 
