@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    internal sealed class BookService:IBookService
+    public sealed class BookService:IBookService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;

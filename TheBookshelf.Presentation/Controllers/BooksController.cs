@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TheBookshelf.Presentation.Controllers
 {
-    //[Route("")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
@@ -22,14 +23,12 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(books);
         }
 
-        [HttpGet("api/categories/{categoryId}/books/{id:guid}")]
+        [HttpGet("api/categories/{categoryId}/books/{id:guid}",Name = "GetBookForCategory")]
         public IActionResult GetBookForCategory(Guid categoryId, Guid Id)
         {
             var book = _service.BookService.GetBook(categoryId, Id, trackChanges:false);
             return Ok(book);
         }
-
-
 
 
         [HttpGet("api/authors/{authorId}/books")]
@@ -45,6 +44,18 @@ namespace TheBookshelf.Presentation.Controllers
         {
             var book = _service.BookService.GetAuthorBook(authorId,Id, trackChanges: false);
             return Ok(book);
+        }
+
+        [HttpPost("api/categories/{categoryId}/books")]
+        public IActionResult CreateBook(Guid categoryId, [FromBody]BookForCreationDto book)
+        {
+            if (book is null)
+            {
+                return BadRequest("BookForCreationDto is null");
+            }
+            var bookToReturn = _service.BookService.CreateBook(categoryId, book, trackChanges: false);
+
+            return CreatedAtRoute("GetBookForCategory", new { categoryId, id = bookToReturn.Id }, bookToReturn);
         }
     }
 }
