@@ -16,6 +16,21 @@ namespace TheBookshelf.Presentation.Controllers
         private readonly IServiceManager _service;
         public BooksController(IServiceManager service)=>_service = service;
 
+        [HttpGet("api/books")]
+        public IActionResult GetAllBooks()
+        {
+            var books = _service.BookService.GetAllBooks(trackChanges:false);
+            return Ok(books);
+        }
+
+        [HttpGet("api/books/{bookId:guid}")]
+        public IActionResult GetBook(Guid bookId)
+        {
+            var book = _service.BookService.GetSingleBook(bookId,trackChanges:false);
+            return Ok(book);
+        }
+
+
         [HttpGet("api/categories/{categoryId}/books")]
         public IActionResult GetBooksForCategory(Guid categoryId)
         {

@@ -42,6 +42,13 @@ namespace Service
             return bookToReturn;
         }
 
+        public IEnumerable<BookDto> GetAllBooks(bool trackChanges)
+        {
+            var books = _repositoryManager.Book.GetAllBooks(trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
+            return booksDto;
+        }
+
         public BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges)
         {
             var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
@@ -107,6 +114,17 @@ namespace Service
             return booksDto;
         }
 
+        public BookDto GetSingleBook(Guid bookId, bool trackChanges)
+        {
+            var book = _repositoryManager.Book.GetSingleBook(bookId,trackChanges);
 
+            if (book is null)
+            {
+                throw new BookNotFoundException(bookId);
+            }
+
+            var bookDto = _mapper.Map<BookDto>(book);
+            return bookDto;
+        }
     }
 }
