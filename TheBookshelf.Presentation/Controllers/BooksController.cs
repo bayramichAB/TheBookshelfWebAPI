@@ -61,16 +61,24 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(book);
         }
 
-        [HttpPost("api/categories/{categoryId}/books")]
-        public IActionResult CreateBook(Guid categoryId, [FromBody]BookForCreationDto book)
+
+        [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBookForCategoryAndAuthor")]
+        public IActionResult GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId)
+        {
+            var book = _service.BookService.GetBookForCategoryAndAuthor(categoryId,authorId,trackChanges:false);
+            return Ok(book);
+        }
+
+        [HttpPost("api/categories/{categoryId}/authors/{authorId}/books")]
+        public IActionResult CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
         {
             if (book is null)
             {
                 return BadRequest("BookForCreationDto is null");
             }
-            var bookToReturn = _service.BookService.CreateBook(categoryId, book, trackChanges: false);
+            var bookToReturn = _service.BookService.CreateBook(categoryId,authorId, book, trackChanges: false);
 
-            return CreatedAtRoute("GetBookForCategory", new { categoryId, id = bookToReturn.Id }, bookToReturn);
+            return CreatedAtRoute("GetBookForCategoryAndAuthor", new { categoryId, id = bookToReturn.Id }, bookToReturn);
         }
     }
 }

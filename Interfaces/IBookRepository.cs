@@ -13,8 +13,10 @@ namespace Interfaces
         Book? GetBook(Guid categoryId, Guid bookId, bool trackChanges);
         Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges);
 
+        Book? GetBookForCategoryAndAuthor(Guid categoryId,Guid authorId,bool trackChanges);
+
         IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges);
-        void CreateBook(Guid categoryId,Book book);
+        void CreateBook(Guid categoryId,Guid authorId,Book book);
 
 
         IEnumerable<Book> GetAllBooks(bool trackChanges);

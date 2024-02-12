@@ -14,7 +14,9 @@ namespace Service.Interfaces
         BookDto GetBook(Guid categoryId, Guid Id, bool trackChanges);
         BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges);
 
-        BookDto CreateBook(Guid categoryId, BookForCreationDto bookForCreation, bool trackChanges);
+        BookDto GetBookForCategoryAndAuthor(Guid categoryId,Guid authorId,bool trackChanges);
+
+        BookDto CreateBook(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges);
 
 
         IEnumerable<BookDto> GetAllBooks(bool trackChanges);

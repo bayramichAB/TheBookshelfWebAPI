@@ -15,9 +15,16 @@ namespace Repository
 
         }
 
-        public void CreateBook(Guid categoryId, Book book)
+        /*public void CreateBook(Guid categoryId, Book book)
         {
             book.CategoryID = categoryId;
+            Create(book);
+        }*/
+
+        public void CreateBook(Guid categoryId, Guid authorId, Book book)
+        {
+            book.CategoryID=categoryId;
+            book.AuthorID=authorId;
             Create(book);
         }
 
@@ -38,5 +45,7 @@ namespace Repository
             FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b=>b.Name).ToList();
 
 
+        public Book? GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId, bool trackChanges) =>
+            FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId), trackChanges).SingleOrDefault();
     }
 }
