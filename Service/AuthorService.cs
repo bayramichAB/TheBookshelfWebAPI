@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
@@ -24,11 +25,22 @@ namespace Service
             _mapper = mapper;
         }
 
+        public AuthorDto CreateAuthor(AuthorForCreationDto author)
+        {
+            var authorEntity = _mapper.Map<Author>(author);
+
+            _repository.Author.CreateAuthor(authorEntity);
+            _repository.Save();
+
+            var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
+            return authorToReturn;
+        }
+
         public IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges)
         {
             var authors = _repository.Author.GetAllAuthors(trackChanges);
             
-            var authersDto=_mapper.Map<IEnumerable< AuthorDto>>(authors);
+            var authersDto=_mapper.Map<IEnumerable<AuthorDto>>(authors);
 
             return authersDto;
         }

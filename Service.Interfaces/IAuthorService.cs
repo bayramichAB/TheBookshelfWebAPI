@@ -11,5 +11,6 @@ namespace Service.Interfaces
     {
         IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges);
         AuthorDto GetAuthor(Guid Id, bool trackChanges);
+        AuthorDto CreateAuthor(AuthorForCreationDto author);
     }
 }

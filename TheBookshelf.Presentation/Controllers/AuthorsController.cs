@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,23 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(authors);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "AuthorById")]
         public IActionResult GetAuthor(Guid Id)
         {
             var author = _serviceManager.AuthorService.GetAuthor(Id,trackChanges:false);
             return Ok(author);
+        }
+
+        [HttpPost]
+        public IActionResult CreateAuthor([FromBody] AuthorForCreationDto author)
+        {
+            if (author is null)
+            {
+                return BadRequest("AuthorForCreationDto object is null");
+            }
+
+            var createdAuthor = _serviceManager.AuthorService.CreateAuthor(author);
+            return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
     }
 }

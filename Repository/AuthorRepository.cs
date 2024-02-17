@@ -16,6 +16,8 @@ namespace Repository
 
         }
 
+        public void CreateAuthor(Author author) => Create(author);
+
         public IEnumerable<Author> GetAllAuthors(bool trackChanges) =>
             FindAll(trackChanges).OrderBy(a => a.Name).ToList();
 
