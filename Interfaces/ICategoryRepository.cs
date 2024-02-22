@@ -12,5 +12,6 @@ namespace Interfaces
         IEnumerable<Category> GetAllCategories(bool trackChanges);
         Category? GetCategory(Guid categoryId,bool trackChanges);
         void CreateCategory(Category category);
+        IEnumerable<Category> GetByIds(IEnumerable<Guid> ids,bool trackChanges);
     }
 }

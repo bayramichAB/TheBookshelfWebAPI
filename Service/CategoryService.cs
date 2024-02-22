@@ -24,6 +24,46 @@ namespace Service
             _mapper = mapper;
         }
 
+
+        public (IEnumerable<CategoryDto> categories,string ids) CreateCategoryCollection(IEnumerable<CategoryForCreationDto> categoryCollection)
+        {
+            if (categoryCollection is null) 
+            {
+                throw new CategoryCollectionBadRequest();
+            }
+
+            var categoryEntities = _mapper.Map<IEnumerable<Category>>(categoryCollection);
+            foreach (var category in categoryEntities)
+            {
+                _repository.Category.CreateCategory(category);
+            }
+            _repository.Save();
+
+            var categoryCollectionToReturn = _mapper.Map<IEnumerable<CategoryDto>>(categoryEntities);
+            var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
+
+            return (categories: categoryCollectionToReturn,ids:ids);
+        }
+
+
+        public IEnumerable<CategoryDto> GetByIds(IEnumerable<Guid> ids,bool trackChanges)
+        {
+            if (ids is null)
+            {
+                throw new IdParametersBadRequestException();
+            }
+
+            var categoryEntities = _repository.Category.GetByIds(ids, trackChanges: false);
+
+            if (ids.Count() != categoryEntities.Count())
+            {
+                throw new CollectionByIdsBadRequestException();
+            }
+
+            var categoriesToReturn = _mapper.Map<IEnumerable<CategoryDto>>(categoryEntities);
+            return categoriesToReturn;
+        }
+
         public CategoryDto CreateCategory(CategoryForCreationDto category)
         {
             var categoryEntity = _mapper.Map<Category>(category);

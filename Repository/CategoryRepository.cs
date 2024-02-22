@@ -14,6 +14,9 @@ namespace Repository
         {
         }
 
+        public IEnumerable<Category> GetByIds(IEnumerable<Guid> ids, bool trackChanges) => 
+            FindByCondition(c => ids.Contains(c.Id), trackChanges).ToList();
+
         public void CreateCategory(Category category) => Create(category);
 
         public IEnumerable<Category> GetAllCategories(bool trackChanges)=>FindAll(trackChanges)
