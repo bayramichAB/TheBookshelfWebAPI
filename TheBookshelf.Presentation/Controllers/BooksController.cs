@@ -23,6 +23,7 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(books);
         }
 
+
         [HttpGet("api/books/{bookId:guid}")]
         public IActionResult GetBook(Guid bookId)
         {
@@ -34,14 +35,15 @@ namespace TheBookshelf.Presentation.Controllers
         [HttpGet("api/categories/{categoryId}/books")]
         public IActionResult GetBooksForCategory(Guid categoryId)
         {
-            var books = _service.BookService.GetBooks(categoryId,trackChanges:false);
+            var books = _service.BookService.GetCategoryBooks(categoryId,trackChanges:false);
             return Ok(books);
         }
+
 
         [HttpGet("api/categories/{categoryId}/books/{id:guid}",Name = "GetBookForCategory")]
         public IActionResult GetBookForCategory(Guid categoryId, Guid Id)
         {
-            var book = _service.BookService.GetBook(categoryId, Id, trackChanges:false);
+            var book = _service.BookService.GetCategoryBook(categoryId, Id, trackChanges:false);
             return Ok(book);
         }
 
@@ -62,12 +64,21 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
 
-        [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBookForCategoryAndAuthor")]
-        public IActionResult GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId)
+        [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBooksForCategoryAndAuthor")]
+        public IActionResult GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId)
         {
-            var book = _service.BookService.GetBookForCategoryAndAuthor(categoryId,authorId,trackChanges:false);
+            var book = _service.BookService.GetBooksForCategoryAndAuthor(categoryId,authorId,trackChanges:false);
             return Ok(book);
         }
+
+
+        [HttpGet("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
+        public IActionResult GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid Id)
+        {
+            var book = _service.BookService.GetBookForCategoryAndAuthor(categoryId, authorId, Id, trackChanges: false);
+            return Ok(book);
+        }
+
 
         [HttpPost("api/categories/{categoryId}/authors/{authorId}/books")]
         public IActionResult CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
@@ -78,7 +89,16 @@ namespace TheBookshelf.Presentation.Controllers
             }
             var bookToReturn = _service.BookService.CreateBook(categoryId,authorId, book, trackChanges: false);
 
-            return CreatedAtRoute("GetBookForCategoryAndAuthor", new { categoryId, id = bookToReturn.Id }, bookToReturn);
+            return CreatedAtRoute("GetBooksForCategoryAndAuthor", new { categoryId, authorId, id = bookToReturn.Id }, bookToReturn);
         }
+
+
+        [HttpDelete("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
+        public IActionResult DeleteBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id)
+        {
+            _service.BookService.DeleteBook(categoryId, authorId, id, trackChanges: false);
+            return NoContent();
+        }
+
     }
 }
