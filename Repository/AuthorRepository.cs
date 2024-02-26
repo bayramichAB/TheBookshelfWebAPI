@@ -16,6 +16,8 @@ namespace Repository
 
         }
 
+        public void DeleteAuthor(Author author) => Delete(author);
+
         public void CreateAuthor(Author author) => Create(author);
 
         public IEnumerable<Author> GetAllAuthors(bool trackChanges) =>

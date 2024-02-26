@@ -9,6 +9,7 @@ namespace Service.Interfaces
 {
     public interface ICategoryService
     {
+        void DeleteCategory(Guid categoryId, bool trackChanges);
         IEnumerable<CategoryDto> GetAllCategories(bool trackChanges);
         CategoryDto GetCategory(Guid categoryId,bool trackChanges);
         CategoryDto CreateCategory(CategoryForCreationDto category);

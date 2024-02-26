@@ -25,6 +25,18 @@ namespace Service
         }
 
 
+        public void DeleteCategory(Guid categoryId, bool trackChanges)
+        {
+            var category = _repository.Category.GetCategory(categoryId,trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            _repository.Category.DeleteCategory(category);
+            _repository.Save();
+        }
+
         public (IEnumerable<CategoryDto> categories,string ids) CreateCategoryCollection(IEnumerable<CategoryForCreationDto> categoryCollection)
         {
             if (categoryCollection is null) 
@@ -44,7 +56,6 @@ namespace Service
 
             return (categories: categoryCollectionToReturn,ids:ids);
         }
-
 
         public IEnumerable<CategoryDto> GetByIds(IEnumerable<Guid> ids,bool trackChanges)
         {

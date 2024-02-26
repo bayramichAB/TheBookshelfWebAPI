@@ -46,7 +46,7 @@ namespace TheBookshelf.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AuthorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,7 +55,8 @@ namespace TheBookshelf.Migrations
                         name: "FK_Books_Authors_AuthorID",
                         column: x => x.AuthorID,
                         principalTable: "Authors",
-                        principalColumn: "AuthorID");
+                        principalColumn: "AuthorID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Books_Categories_CategoryID",
                         column: x => x.CategoryID,

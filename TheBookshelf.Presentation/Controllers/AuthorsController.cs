@@ -16,6 +16,14 @@ namespace TheBookshelf.Presentation.Controllers
         private readonly IServiceManager _serviceManager;
         public AuthorsController(IServiceManager serviceManager)=>_serviceManager = serviceManager;
 
+
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {
+            _serviceManager.AuthorService.DeleteAuthor(id, trackChanges: false);
+            return NoContent();
+        }
+
         [HttpGet]
         public IActionResult GetAuthors()
         {
@@ -41,5 +49,7 @@ namespace TheBookshelf.Presentation.Controllers
             var createdAuthor = _serviceManager.AuthorService.CreateAuthor(author);
             return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
+
+        
     }
 }

@@ -41,7 +41,7 @@ namespace Entities.Models
 
 
         [ForeignKey(nameof(Author))]
-        public Guid? AuthorID { get; set; }
+        public Guid AuthorID { get; set; }
 
         public Author? Author { get; set; }
     }

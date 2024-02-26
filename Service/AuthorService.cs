@@ -25,6 +25,18 @@ namespace Service
             _mapper = mapper;
         }
 
+        public void DeleteAuthor(Guid authorId,bool trackChanges)
+        {
+            var author = _repository.Author.GetAuthor(authorId,trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            _repository.Author.DeleteAuthor(author);
+            _repository.Save();
+        }
+
         public AuthorDto CreateAuthor(AuthorForCreationDto author)
         {
             var authorEntity = _mapper.Map<Author>(author);

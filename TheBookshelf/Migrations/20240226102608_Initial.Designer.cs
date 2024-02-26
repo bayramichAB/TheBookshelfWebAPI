@@ -12,7 +12,7 @@ using Repository;
 namespace TheBookshelf.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240203120503_Initial")]
+    [Migration("20240226102608_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace TheBookshelf.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("BookId");
 
-                    b.Property<Guid?>("AuthorID")
+                    b.Property<Guid>("AuthorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Available")
@@ -312,7 +312,9 @@ namespace TheBookshelf.Migrations
                 {
                     b.HasOne("Entities.Models.Author", "Author")
                         .WithMany("Books")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Models.Category", "Category")
                         .WithMany("Books")

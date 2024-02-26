@@ -12,5 +12,6 @@ namespace Interfaces
         IEnumerable<Author> GetAllAuthors(bool trackChanges);
         Author? GetAuthor(Guid authorId, bool trachChanges);
         void CreateAuthor(Author author);
+        void DeleteAuthor(Author author);
     }
 }

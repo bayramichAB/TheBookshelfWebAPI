@@ -13,6 +13,13 @@ namespace TheBookshelf.Presentation.Controllers
         private readonly IServiceManager _service;
         public CategoriesController(IServiceManager service)=>_service = service;
 
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteCategory(Guid id)
+        {
+            _service.CategoryService.DeleteCategory(id, trackChanges:false);
+            return NoContent();
+        }
+
 
         [HttpGet("collection/({ids})", Name ="CategoryCollection")]
         public IActionResult GetCategoryCollection([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
@@ -27,6 +34,7 @@ namespace TheBookshelf.Presentation.Controllers
             var categories = _service.CategoryService.GetAllCategories(trackChanges: false);
             return Ok(categories);
         }
+
 
         [HttpGet("{id:guid}",Name ="CategoryById")]
         public IActionResult GetCategory(Guid id)

@@ -105,7 +105,7 @@ namespace TheBookshelf.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("BookId");
 
-                    b.Property<Guid?>("AuthorID")
+                    b.Property<Guid>("AuthorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Available")
@@ -310,7 +310,9 @@ namespace TheBookshelf.Migrations
                 {
                     b.HasOne("Entities.Models.Author", "Author")
                         .WithMany("Books")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Models.Category", "Category")
                         .WithMany("Books")
