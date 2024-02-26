@@ -100,5 +100,19 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPut("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
+        public IActionResult UpdateBookForCategoryAndAuthor(Guid categoryId,Guid authorId,Guid id,
+            [FromBody] BookForUpdateDto book)
+        {
+            if (book is null)
+            {
+                return BadRequest("BookForUpdateDto object is null");
+            }
+
+            _service.BookService.UpdateBookForCategoryAndAuthor(categoryId,authorId,id,book,
+                catTrackChanges:false,authTrackChanges:false,bookTrackChanges:true);
+            return NoContent();
+        }
+
     }
 }

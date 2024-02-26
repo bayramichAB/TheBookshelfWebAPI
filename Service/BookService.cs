@@ -25,6 +25,31 @@ namespace Service
             _mapper = mapper;
         }
 
+        public void UpdateBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id, 
+            BookForUpdateDto bookForUpdateDto, bool catTrackChanges, bool authTrackChanges, bool bookTrackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId,catTrackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var author = _repositoryManager.Author.GetAuthor(authorId,authTrackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var bookEntity = _repositoryManager.Book.GetBookForCategoryAndAuthor(categoryId,authorId,id,bookTrackChanges);
+            if (bookEntity is null)
+            {
+                throw new BookNotFoundException(id);
+            }
+
+            _mapper.Map(bookForUpdateDto, bookEntity);
+            _repositoryManager.Save();
+        }
+
         public BookDto CreateBook(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges)
         {
             var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);

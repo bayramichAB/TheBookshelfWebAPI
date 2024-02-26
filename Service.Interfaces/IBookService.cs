@@ -9,6 +9,10 @@ namespace Service.Interfaces
 {
     public interface IBookService
     {
+
+        void UpdateBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id,BookForUpdateDto bookForUpdateDto,
+            bool catTrackChanges,bool authTrackChanges,bool bookTrackChanges);
+
         IEnumerable<BookDto> GetCategoryBooks(Guid categoryId,bool trackChanges);
         IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges);
         BookDto GetCategoryBook(Guid categoryId, Guid Id, bool trackChanges);
