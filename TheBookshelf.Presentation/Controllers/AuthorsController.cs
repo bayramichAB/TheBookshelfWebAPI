@@ -15,13 +15,13 @@ namespace TheBookshelf.Presentation.Controllers
     {
         private readonly IServiceManager _serviceManager;
         public AuthorsController(IServiceManager serviceManager)=>_serviceManager = serviceManager;
+        
 
-
-        [HttpDelete("{id:guid}")]
-        public IActionResult DeleteAuthor(Guid id)
+        [HttpGet("{id:guid}", Name = "AuthorById")]
+        public IActionResult GetAuthor(Guid Id)
         {
-            _serviceManager.AuthorService.DeleteAuthor(id, trackChanges: false);
-            return NoContent();
+            var author = _serviceManager.AuthorService.GetAuthor(Id,trackChanges:false);
+            return Ok(author);
         }
 
         [HttpGet]
@@ -29,13 +29,6 @@ namespace TheBookshelf.Presentation.Controllers
         {
             var authors = _serviceManager.AuthorService.GetAllAuthors(trackChanges:false);
             return Ok(authors);
-        }
-
-        [HttpGet("{id:guid}", Name = "AuthorById")]
-        public IActionResult GetAuthor(Guid Id)
-        {
-            var author = _serviceManager.AuthorService.GetAuthor(Id,trackChanges:false);
-            return Ok(author);
         }
 
         [HttpPost]
@@ -50,6 +43,24 @@ namespace TheBookshelf.Presentation.Controllers
             return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
 
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {
+            _serviceManager.AuthorService.DeleteAuthor(id, trackChanges: false);
+            return NoContent();
+        }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateAuthor(Guid id, [FromBody] AuthorForUpdateDto author)
+        {
+            if (author is null)
+            {
+                return BadRequest("AuthorForUpdateDto object is null");
+            }
+
+            _serviceManager.AuthorService.UpdateAuthor(id, author, trackChanges: true);
+            return NoContent();
+        }
         
     }
 }

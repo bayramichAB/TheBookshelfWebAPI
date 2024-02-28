@@ -25,6 +25,38 @@ namespace Service
             _mapper = mapper;
         }
 
+        public AuthorDto GetAuthor(Guid authorId, bool trackChanges)
+        {
+            var author = _repository.Author.GetAuthor(authorId,trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var authorDto = _mapper.Map<AuthorDto>(author);
+            return authorDto;
+        }  
+
+        public IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges)
+        {
+            var authors = _repository.Author.GetAllAuthors(trackChanges);
+            
+            var authersDto=_mapper.Map<IEnumerable<AuthorDto>>(authors);
+
+            return authersDto;
+        }
+
+        public AuthorDto CreateAuthor(AuthorForCreationDto author)
+        {
+            var authorEntity = _mapper.Map<Author>(author);
+
+            _repository.Author.CreateAuthor(authorEntity);
+            _repository.Save();
+
+            var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
+            return authorToReturn;
+        }  
+
         public void DeleteAuthor(Guid authorId,bool trackChanges)
         {
             var author = _repository.Author.GetAuthor(authorId,trackChanges);
@@ -37,36 +69,17 @@ namespace Service
             _repository.Save();
         }
 
-        public AuthorDto CreateAuthor(AuthorForCreationDto author)
+        public void UpdateAuthor(Guid authorId, AuthorForUpdateDto authorForUpdate,bool trackChanges)
         {
-            var authorEntity = _mapper.Map<Author>(author);
+            var authorEntity = _repository.Author.GetAuthor(authorId,trackChanges);
 
-            _repository.Author.CreateAuthor(authorEntity);
-            _repository.Save();
-
-            var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
-            return authorToReturn;
-        }
-
-        public IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges)
-        {
-            var authors = _repository.Author.GetAllAuthors(trackChanges);
-            
-            var authersDto=_mapper.Map<IEnumerable<AuthorDto>>(authors);
-
-            return authersDto;
-        }
-
-        public AuthorDto GetAuthor(Guid authorId, bool trackChanges)
-        {
-            var author = _repository.Author.GetAuthor(authorId,trackChanges);
-            if (author is null)
+            if (authorEntity is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
             }
 
-            var authorDto = _mapper.Map<AuthorDto>(author);
-            return authorDto;
+            _mapper.Map(authorForUpdate,authorEntity);
+            _repository.Save();
         }
     }
 }
