@@ -25,29 +25,133 @@ namespace Service
             _mapper = mapper;
         }
 
-        public void UpdateBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id, 
-            BookForUpdateDto bookForUpdateDto, bool catTrackChanges, bool authTrackChanges, bool bookTrackChanges)
+        public BookDto GetSingleBook(Guid bookId, bool trackChanges)
         {
-            var category = _repositoryManager.Category.GetCategory(categoryId,catTrackChanges);
+            var book = _repositoryManager.Book.GetSingleBook(bookId,trackChanges);
+
+            if (book is null)
+            {
+                throw new BookNotFoundException(bookId);
+            }
+
+            var bookDto = _mapper.Map<BookDto>(book);
+            return bookDto;
+        }
+
+        public IEnumerable<BookDto> GetAllBooks(bool trackChanges)
+        {
+            var books = _repositoryManager.Book.GetAllBooks(trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
+            return booksDto;
+        } 
+
+        public BookDto GetCategoryBook(Guid categoryId, Guid Id, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
+
             if (category is null)
             {
                 throw new CategoryNotFoundException(categoryId);
             }
 
-            var author = _repositoryManager.Author.GetAuthor(authorId,authTrackChanges);
+            var book = _repositoryManager.Book.GetBookForCategory(categoryId, Id,trackChanges);
+
+            if (book is null)
+            {
+                throw new BookNotFoundException(Id);
+            }
+            var booksDto= _mapper.Map<BookDto>(book);
+            return booksDto;
+        }
+        
+        public BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges)
+        {
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
             if (author is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
             }
 
-            var bookEntity = _repositoryManager.Book.GetBookForCategoryAndAuthor(categoryId,authorId,id,bookTrackChanges);
-            if (bookEntity is null)
+            var book = _repositoryManager.Book.GetAuthorBook(authorId, Id, trackChanges);
+
+            if (book is null)
+            {
+                throw new BookNotFoundException(Id);
+            }
+
+            var bookDto=_mapper.Map<BookDto>(book);
+            return bookDto;
+        }
+        
+        public IEnumerable<BookDto> GetCategoryBooks(Guid categoryId, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var books = _repositoryManager.Book.GetBooksForCategory(categoryId,trackChanges);
+            var booksDto=_mapper.Map<IEnumerable< BookDto>>(books);
+
+            return booksDto;
+        }
+
+        public IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges)
+        {
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var books = _repositoryManager.Book.GetAuthorBooks(authorId, trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
+            return booksDto;
+        }  
+        
+        public BookDto GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId, trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var book = _repositoryManager.Book.GetBookForCategoryAndAuthor(categoryId, authorId,id, trackChanges);
+            if (book is null)
             {
                 throw new BookNotFoundException(id);
             }
+            
+            var bookDto = _mapper.Map<BookDto>(book);
+            return bookDto;
+        }
 
-            _mapper.Map(bookForUpdateDto, bookEntity);
-            _repositoryManager.Save();
+        public IEnumerable<BookDto> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId, bool trackChanges)
+        {
+            var category = _repositoryManager.Category.GetCategory(categoryId, trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+
+            var books = _repositoryManager.Book.GetBooksForCategoryAndAuthor(categoryId, authorId, trackChanges);
+
+            var bookDto = _mapper.Map<IEnumerable<BookDto>>(books);
+            return bookDto;
         }
 
         public BookDto CreateBook(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges)
@@ -97,140 +201,58 @@ namespace Service
 
             _repositoryManager.Book.DeleteBook(bookForCategoryAndAuthor);
             _repositoryManager.Save();
-        }
+        }  
 
-        public IEnumerable<BookDto> GetAllBooks(bool trackChanges)
+        public void UpdateBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id, 
+            BookForUpdateDto bookForUpdateDto, bool catTrackChanges, bool authTrackChanges, bool bookTrackChanges)
         {
-            var books = _repositoryManager.Book.GetAllBooks(trackChanges);
-            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return booksDto;
-        }
-
-        public BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges)
-        {
-            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
-
-            var book = _repositoryManager.Book.GetAuthorBook(authorId, Id, trackChanges);
-
-            if (book is null)
-            {
-                throw new BookNotFoundException(Id);
-            }
-
-            var bookDto=_mapper.Map<BookDto>(book);
-            return bookDto;
-        }
-
-        public IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges)
-        {
-            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
-
-            var books = _repositoryManager.Book.GetAuthorBooks(authorId, trackChanges);
-            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return booksDto;
-        }
-
-        public BookDto GetCategoryBook(Guid categoryId, Guid Id, bool trackChanges)
-        {
-            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
-
+            var category = _repositoryManager.Category.GetCategory(categoryId,catTrackChanges);
             if (category is null)
             {
                 throw new CategoryNotFoundException(categoryId);
             }
 
-            var book = _repositoryManager.Book.GetBookForCategory(categoryId, Id,trackChanges);
-
-            if (book is null)
-            {
-                throw new BookNotFoundException(Id);
-            }
-            var booksDto= _mapper.Map<BookDto>(book);
-            return booksDto;
-        }
-
-       
-        public IEnumerable<BookDto> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId, bool trackChanges)
-        {
-            var category = _repositoryManager.Category.GetCategory(categoryId, trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
-
-            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
+            var author = _repositoryManager.Author.GetAuthor(authorId,authTrackChanges);
             if (author is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
             }
 
-            var books = _repositoryManager.Book.GetBooksForCategoryAndAuthor(categoryId, authorId, trackChanges);
-
-            var bookDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return bookDto;
-        }
-
-
-        public BookDto GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id, bool trackChanges)
-        {
-            var category = _repositoryManager.Category.GetCategory(categoryId, trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
-
-            var author = _repositoryManager.Author.GetAuthor(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
-
-            var book = _repositoryManager.Book.GetBookForCategoryAndAuthor(categoryId, authorId,id, trackChanges);
-            if (book is null)
+            var bookEntity = _repositoryManager.Book.GetBookForCategoryAndAuthor(categoryId,authorId,id,bookTrackChanges);
+            if (bookEntity is null)
             {
                 throw new BookNotFoundException(id);
             }
-            
-            var bookDto = _mapper.Map<BookDto>(book);
-            return bookDto;
+
+            _mapper.Map(bookForUpdateDto, bookEntity);
+            _repositoryManager.Save();
         }
 
 
-        public IEnumerable<BookDto> GetCategoryBooks(Guid categoryId, bool trackChanges)
+        public (BookForUpdateDto bookToPatch, Book bookEntity) GetBookForPatch(Guid categoryId, Guid id, bool catTrackChanges, bool bookTrackChanges)
         {
-            var category = _repositoryManager.Category.GetCategory(categoryId,trackChanges);
+            var category = _repositoryManager.Category.GetCategory(categoryId,catTrackChanges);
             if (category is null)
             {
                 throw new CategoryNotFoundException(categoryId);
             }
 
-            var books = _repositoryManager.Book.GetBooksForCategory(categoryId,trackChanges);
-            var booksDto=_mapper.Map<IEnumerable< BookDto>>(books);
+            var bookEntity = _repositoryManager.Book.GetBookForCategory(categoryId,id,bookTrackChanges);
 
-            return booksDto;
-        }
-
-        public BookDto GetSingleBook(Guid bookId, bool trackChanges)
-        {
-            var book = _repositoryManager.Book.GetSingleBook(bookId,trackChanges);
-
-            if (book is null)
+            if (bookEntity is null)
             {
-                throw new BookNotFoundException(bookId);
+                throw new BookNotFoundException(categoryId);
             }
 
-            var bookDto = _mapper.Map<BookDto>(book);
-            return bookDto;
+            var bookToPatch = _mapper.Map<BookForUpdateDto>(bookEntity);
+
+            return (bookToPatch,bookEntity);
         }
 
-  
+        public void SaveChangesForPatch(BookForUpdateDto bookToPatch, Book bookEntity)
+        {
+            _mapper.Map(bookToPatch, bookEntity);
+            _repositoryManager.Save();
+        }
     }
 }

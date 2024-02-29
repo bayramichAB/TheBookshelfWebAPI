@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -114,5 +115,21 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
+
+        
+        [HttpPatch("api/categories/{categoryId}/books/{id:guid}")]
+        public IActionResult PartiallyUpdateBookForCategory(Guid categoryId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        {
+            if (patchDoc is null)
+            {
+                return BadRequest("patchDoc object is null");
+            }
+
+            var result = _service.BookService.GetBookForPatch(categoryId,id,catTrackChanges:false,bookTrackChanges:true);
+            patchDoc.ApplyTo(result.bookToPatch);
+
+            _service.BookService.SaveChangesForPatch(result.bookToPatch,result.bookEntity);
+            return NoContent();
+        }
     }
 }

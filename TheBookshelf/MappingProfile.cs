@@ -16,7 +16,7 @@ namespace TheBookshelf
             CreateMap<BookForCreationDto,Book>();
             CreateMap<AuthorForCreationDto, Author>();
 
-            CreateMap<BookForUpdateDto, Book>();
+            CreateMap<BookForUpdateDto, Book>().ReverseMap();
             CreateMap<CategoryForUpdateDto, Category>();
             CreateMap<AuthorForUpdateDto, Author>();
         }
