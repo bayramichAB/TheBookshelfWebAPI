@@ -14,7 +14,6 @@ namespace Entities.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Book name is a required field.")]
-        //[MaxLength(90, ErrorMessage = "Maximum length for the Name is 60 characters.")]
         public string? Name { get; set; }
 
         [Required]

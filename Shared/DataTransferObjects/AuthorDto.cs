@@ -6,5 +6,10 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record AuthorDto(Guid Id,string Name, string Biography);
+    public record AuthorDto
+    {
+        public Guid Id {  get; init; }
+        public string? Name {  get; init; }
+        public string? Biography {  get; init; }
+    };
 }

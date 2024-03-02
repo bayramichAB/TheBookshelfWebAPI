@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record BookForCreationDto
-        (
-        string Name,
-        decimal Price,
-        bool Available,
-        string Pages,
-        DateTime Date,
-        string Description
-        );
+    public record BookForCreationDto : BookForManipulationDto;
 }

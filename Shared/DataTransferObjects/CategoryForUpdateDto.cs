@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record CategoryForUpdateDto(string Name);
+    public record CategoryForUpdateDto : CategoryForManipulationDto;
 }

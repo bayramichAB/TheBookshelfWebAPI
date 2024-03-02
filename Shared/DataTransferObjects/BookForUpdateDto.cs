@@ -6,13 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record BookForUpdateDto
-        (
-        string Name,
-        decimal Price,
-        bool Available,
-        string Pages,
-        DateTime Date,
-        string Description
-        );
+    public record BookForUpdateDto : BookForManipulationDto;
 }

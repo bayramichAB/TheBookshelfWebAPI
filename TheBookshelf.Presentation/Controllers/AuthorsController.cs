@@ -39,6 +39,9 @@ namespace TheBookshelf.Presentation.Controllers
                 return BadRequest("AuthorForCreationDto object is null");
             }
 
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
             var createdAuthor = _serviceManager.AuthorService.CreateAuthor(author);
             return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
@@ -57,6 +60,9 @@ namespace TheBookshelf.Presentation.Controllers
             {
                 return BadRequest("AuthorForUpdateDto object is null");
             }
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
 
             _serviceManager.AuthorService.UpdateAuthor(id, author, trackChanges: true);
             return NoContent();

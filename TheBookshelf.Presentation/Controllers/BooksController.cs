@@ -85,9 +85,11 @@ namespace TheBookshelf.Presentation.Controllers
         public IActionResult CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
         {
             if (book is null)
-            {
                 return BadRequest("BookForCreationDto is null");
-            }
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
             var bookToReturn = _service.BookService.CreateBook(categoryId,authorId, book, trackChanges: false);
 
             return CreatedAtRoute("GetBooksForCategoryAndAuthor", new { categoryId, authorId, id = bookToReturn.Id }, bookToReturn);
@@ -110,6 +112,9 @@ namespace TheBookshelf.Presentation.Controllers
                 return BadRequest("BookForUpdateDto object is null");
             }
 
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
             _service.BookService.UpdateBookForCategoryAndAuthor(categoryId,authorId,id,book,
                 catTrackChanges:false,authTrackChanges:false,bookTrackChanges:true);
             return NoContent();
@@ -126,7 +131,13 @@ namespace TheBookshelf.Presentation.Controllers
             }
 
             var result = _service.BookService.GetBookForPatch(categoryId,id,catTrackChanges:false,bookTrackChanges:true);
-            patchDoc.ApplyTo(result.bookToPatch);
+            patchDoc.ApplyTo(result.bookToPatch,ModelState);
+
+            TryValidateModel(result.bookToPatch);
+
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
 
             _service.BookService.SaveChangesForPatch(result.bookToPatch,result.bookEntity);
             return NoContent();
