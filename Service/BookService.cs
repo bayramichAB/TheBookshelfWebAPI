@@ -25,6 +25,29 @@ namespace Service
             _mapper = mapper;
         }
 
+        private async Task<Category> GetCategoryAndCheckIfItExists(Guid categoryId, bool trackChanges)
+        {
+            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId, trackChanges);
+
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+            return category;
+        }
+
+        private async Task<Author> GetAuthorAndCheckIfItExists(Guid authorId, bool trackChanges)
+        {
+            var author = await _repositoryManager.Author.GetAuthorAsync(authorId, trackChanges);
+            if (author is null)
+            {
+                throw new AuthorNotFoundExeption(authorId);
+            }
+            return author;
+        }
+
+
+
         public async Task <BookDto> GetSingleBookAsync(Guid bookId, bool trackChanges)
         {
             var book = await _repositoryManager.Book.GetSingleBookAsync(bookId,trackChanges);
@@ -47,12 +70,7 @@ namespace Service
 
         public async Task<BookDto> GetCategoryBookAsync(Guid categoryId, Guid Id, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,trackChanges);
-
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
             var book = await _repositoryManager.Book.GetBookForCategoryAsync(categoryId, Id,trackChanges);
 
@@ -66,11 +84,7 @@ namespace Service
         
         public async Task<BookDto> GetAuthorBookAsync(Guid authorId, Guid Id, bool trackChanges)
         {
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var book = await _repositoryManager.Book.GetAuthorBookAsync(authorId, Id, trackChanges);
 
@@ -85,11 +99,7 @@ namespace Service
         
         public async Task<IEnumerable<BookDto>> GetCategoryBooksAsync(Guid categoryId, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
             var books = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId,trackChanges);
             var booksDto=_mapper.Map<IEnumerable< BookDto>>(books);
@@ -99,11 +109,7 @@ namespace Service
 
         public async Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges)
         {
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var books = await _repositoryManager.Book.GetAuthorBooksAsync(authorId, trackChanges);
             var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
@@ -112,17 +118,9 @@ namespace Service
         
         public async Task<BookDto> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid id, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId, trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var book = await _repositoryManager.Book.GetBookForCategoryAndAuthorAsync(categoryId, authorId,id, trackChanges);
             if (book is null)
@@ -136,17 +134,9 @@ namespace Service
 
         public async Task<IEnumerable<BookDto>> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId, trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId, trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var books = await _repositoryManager.Book.GetBooksForCategoryAndAuthorAsync(categoryId, authorId, trackChanges);
 
@@ -156,22 +146,14 @@ namespace Service
 
         public async Task<BookDto> CreateBookAsync(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId,trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var bookEntity = _mapper.Map<Book>(bookForCreation);
 
             _repositoryManager.Book.CreateBook(categoryId,authorId,bookEntity);
-            await _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
 
             var bookToReturn = _mapper.Map<BookDto>(bookEntity);
             return bookToReturn;
@@ -179,19 +161,9 @@ namespace Service
 
         public async Task DeleteBookAsync(Guid categoryId,Guid authorId, Guid id, bool trackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,trackChanges);
+            var category = GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
-
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId,trackChanges);
-
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var bookForCategoryAndAuthor = await _repositoryManager.Book.GetBookForCategoryAndAuthorAsync(categoryId, authorId, id, trackChanges);
             if (bookForCategoryAndAuthor is null)
@@ -200,23 +172,15 @@ namespace Service
             }
 
             _repositoryManager.Book.DeleteBook(bookForCategoryAndAuthor);
-            await _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }  
 
         public async Task UpdateBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, Guid id, 
             BookForUpdateDto bookForUpdateDto, bool catTrackChanges, bool authTrackChanges, bool bookTrackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,catTrackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId, catTrackChanges);
 
-            var author = await _repositoryManager.Author.GetAuthorAsync(authorId,authTrackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId, authTrackChanges);
 
             var bookEntity = await _repositoryManager.Book.GetBookForCategoryAndAuthorAsync(categoryId,authorId,id,bookTrackChanges);
             if (bookEntity is null)
@@ -225,17 +189,13 @@ namespace Service
             }
 
             _mapper.Map(bookForUpdateDto, bookEntity);
-            await _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
 
 
         public async Task<(BookForUpdateDto bookToPatch, Book bookEntity)> GetBookForPatchAsync(Guid categoryId, Guid id, bool catTrackChanges, bool bookTrackChanges)
         {
-            var category = await _repositoryManager.Category.GetCategoryAsync(categoryId,catTrackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId,catTrackChanges);
 
             var bookEntity = await _repositoryManager.Book.GetBookForCategoryAsync(categoryId,id,bookTrackChanges);
 
@@ -252,7 +212,7 @@ namespace Service
         public async Task SaveChangesForPatchAsync(BookForUpdateDto bookToPatch, Book bookEntity)
         {
             _mapper.Map(bookToPatch, bookEntity);
-            await _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
     }
 }

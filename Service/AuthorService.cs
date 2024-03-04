@@ -25,13 +25,19 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task<AuthorDto> GetAuthorAsync(Guid authorId, bool trackChanges)
+
+        private async Task<Author> GetAuthorAndCheckIfItExists(Guid authorId, bool trackChanges)
         {
-            var author = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
+            var author = await _repository.Author.GetAuthorAsync(authorId, trackChanges);
             if (author is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
             }
+            return author;
+        }
+        public async Task<AuthorDto> GetAuthorAsync(Guid authorId, bool trackChanges)
+        {
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
             var authorDto = _mapper.Map<AuthorDto>(author);
             return authorDto;
@@ -51,7 +57,7 @@ namespace Service
             var authorEntity = _mapper.Map<Author>(author);
 
             _repository.Author.CreateAuthor(authorEntity);
-            await _repository.Save();
+            await _repository.SaveAsync();
 
             var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
             return authorToReturn;
@@ -59,27 +65,18 @@ namespace Service
 
         public async Task DeleteAuthorAsync(Guid authorId,bool trackChanges)
         {
-            var author = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
-            if (author is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
+            var author = await GetAuthorAndCheckIfItExists(authorId,trackChanges);
 
             _repository.Author.DeleteAuthor(author);
-            await _repository.Save();
+            await _repository.SaveAsync();
         }
 
         public async Task UpdateAuthorAsync(Guid authorId, AuthorForUpdateDto authorForUpdate,bool trackChanges)
         {
-            var authorEntity = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
+            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
-            if (authorEntity is null)
-            {
-                throw new AuthorNotFoundExeption(authorId);
-            }
-
-            _mapper.Map(authorForUpdate,authorEntity);
-            await _repository.Save();
+            _mapper.Map(authorForUpdate,author);
+            await _repository.SaveAsync();
         }
     }
 }

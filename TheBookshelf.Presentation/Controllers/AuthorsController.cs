@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheBookshelf.Presentation.ActionFilters;
 
 namespace TheBookshelf.Presentation.Controllers
 {
@@ -32,13 +33,9 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto author)
         {
-            if (author is null)
-            {
-                return BadRequest("AuthorForCreationDto object is null");
-            }
-
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
@@ -54,13 +51,9 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody] AuthorForUpdateDto author)
         {
-            if (author is null)
-            {
-                return BadRequest("AuthorForUpdateDto object is null");
-            }
-
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 

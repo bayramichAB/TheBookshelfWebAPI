@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
+using TheBookshelf.Presentation.ActionFilters;
 using TheBookshelf.Presentation.ModelBinders;
 
 
@@ -43,13 +44,9 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto category)
         {
-            if (category is null)
-            {
-                return BadRequest("CategoryForCreationDto object is null");
-            }
-
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
@@ -66,13 +63,9 @@ namespace TheBookshelf.Presentation.Controllers
         }
         
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryForUpdateDto category)
         {
-            if (category is null)
-            {
-                return BadRequest("CategoryForUpdateDto object is null");
-            }
-
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 

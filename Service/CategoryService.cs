@@ -25,13 +25,19 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task<CategoryDto> GetCategoryAsync(Guid categoryId, bool trackChanges)
+        private async Task<Category> GetCategoryAndCheckIfItExists(Guid categoryId, bool trackChanges)
         {
             var category = await _repository.Category.GetCategoryAsync(categoryId, trackChanges);
             if (category is null)
             {
                 throw new CategoryNotFoundException(categoryId);
             }
+            return category;
+        }
+
+        public async Task<CategoryDto> GetCategoryAsync(Guid categoryId, bool trackChanges)
+        {
+            var category = await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
             var categoryDto=_mapper.Map<CategoryDto>(category);
             return categoryDto;
@@ -69,7 +75,7 @@ namespace Service
             var categoryEntity = _mapper.Map<Category>(category);
 
             _repository.Category.CreateCategory(categoryEntity);
-            await _repository.Save();
+            await _repository.SaveAsync();
 
             var categoryToReturn = _mapper.Map<CategoryDto>(categoryEntity);
             return categoryToReturn;
@@ -87,7 +93,7 @@ namespace Service
             {
                 _repository.Category.CreateCategory(category);
             }
-            await _repository.Save();
+            await _repository.SaveAsync();
 
             var categoryCollectionToReturn = _mapper.Map<IEnumerable<CategoryDto>>(categoryEntities);
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
@@ -97,26 +103,19 @@ namespace Service
         
         public async Task DeleteCategoryAsync(Guid categoryId, bool trackChanges)
         {
-            var category = await _repository.Category.GetCategoryAsync(categoryId,trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            
+            var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
             _repository.Category.DeleteCategory(category);
-            await _repository.Save();
+            await _repository.SaveAsync();
         }
 
         public async Task UpdateCategoryAsync(Guid categoryId, CategoryForUpdateDto categoryForUpdate,bool trackChanges)
         {
-            var categoryEntity = await _repository.Category.GetCategoryAsync(categoryId,trackChanges);
-            if (categoryEntity is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
+            var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
-            _mapper.Map(categoryForUpdate,categoryEntity);
-            await _repository.Save();
+            _mapper.Map(categoryForUpdate,category);
+            await _repository.SaveAsync();
         }
     }
 }

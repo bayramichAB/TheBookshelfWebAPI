@@ -5,6 +5,7 @@ using NLog;
 using TheBookshelf.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
+using TheBookshelf.Presentation.ActionFilters;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddScoped<ValidationFilterAttribute>();
 /*Without this code, our API wouldn’t work, and wouldn’t know where to route incoming requests. 
  *But now, our app will find all of the controllers inside of the Presentation project and 
  *configure them with the framework.*/
