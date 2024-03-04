@@ -25,9 +25,9 @@ namespace Service
             _mapper = mapper;
         }
 
-        public CategoryDto GetCategory(Guid categoryId, bool trackChanges)
+        public async Task<CategoryDto> GetCategoryAsync(Guid categoryId, bool trackChanges)
         {
-            var category=_repository.Category.GetCategory(categoryId, trackChanges);
+            var category = await _repository.Category.GetCategoryAsync(categoryId, trackChanges);
             if (category is null)
             {
                 throw new CategoryNotFoundException(categoryId);
@@ -37,23 +37,23 @@ namespace Service
             return categoryDto;
         }
         
-        public IEnumerable<CategoryDto> GetAllCategories(bool trackChanges)
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(bool trackChanges)
         {
-            var categories = _repository.Category.GetAllCategories(trackChanges);
+            var categories = await _repository.Category.GetAllCategoriesAsync(trackChanges);
 
             var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
             return categoriesDto;
         }
         
-        public IEnumerable<CategoryDto> GetByIds(IEnumerable<Guid> ids,bool trackChanges)
+        public async Task< IEnumerable<CategoryDto>> GetByIdsAsync(IEnumerable<Guid> ids,bool trackChanges)
         {
             if (ids is null)
             {
                 throw new IdParametersBadRequestException();
             }
 
-            var categoryEntities = _repository.Category.GetByIds(ids, trackChanges: false);
+            var categoryEntities = await _repository.Category.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != categoryEntities.Count())
             {
@@ -64,30 +64,18 @@ namespace Service
             return categoriesToReturn;
         }
 
-        public void DeleteCategory(Guid categoryId, bool trackChanges)
-        {
-            var category = _repository.Category.GetCategory(categoryId,trackChanges);
-            if (category is null)
-            {
-                throw new CategoryNotFoundException(categoryId);
-            }
-
-            _repository.Category.DeleteCategory(category);
-            _repository.Save();
-        }
-        
-        public CategoryDto CreateCategory(CategoryForCreationDto category)
+        public async Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto category)
         {
             var categoryEntity = _mapper.Map<Category>(category);
 
             _repository.Category.CreateCategory(categoryEntity);
-            _repository.Save();
+            await _repository.Save();
 
             var categoryToReturn = _mapper.Map<CategoryDto>(categoryEntity);
             return categoryToReturn;
         }
-
-        public (IEnumerable<CategoryDto> categories,string ids) CreateCategoryCollection(IEnumerable<CategoryForCreationDto> categoryCollection)
+        
+        public async Task<(IEnumerable<CategoryDto> categories,string ids)> CreateCategoryCollectionAsync(IEnumerable<CategoryForCreationDto> categoryCollection)
         {
             if (categoryCollection is null) 
             {
@@ -99,24 +87,36 @@ namespace Service
             {
                 _repository.Category.CreateCategory(category);
             }
-            _repository.Save();
+            await _repository.Save();
 
             var categoryCollectionToReturn = _mapper.Map<IEnumerable<CategoryDto>>(categoryEntities);
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
 
             return (categories: categoryCollectionToReturn,ids:ids);
         }
-
-        public void UpdateCategory(Guid categoryId, CategoryForUpdateDto categoryForUpdate,bool trackChanges)
+        
+        public async Task DeleteCategoryAsync(Guid categoryId, bool trackChanges)
         {
-            var categoryEntity = _repository.Category.GetCategory(categoryId,trackChanges);
+            var category = await _repository.Category.GetCategoryAsync(categoryId,trackChanges);
+            if (category is null)
+            {
+                throw new CategoryNotFoundException(categoryId);
+            }
+
+            _repository.Category.DeleteCategory(category);
+            await _repository.Save();
+        }
+
+        public async Task UpdateCategoryAsync(Guid categoryId, CategoryForUpdateDto categoryForUpdate,bool trackChanges)
+        {
+            var categoryEntity = await _repository.Category.GetCategoryAsync(categoryId,trackChanges);
             if (categoryEntity is null)
             {
                 throw new CategoryNotFoundException(categoryId);
             }
 
             _mapper.Map(categoryForUpdate,categoryEntity);
-            _repository.Save();
+            await _repository.Save();
         }
     }
 }

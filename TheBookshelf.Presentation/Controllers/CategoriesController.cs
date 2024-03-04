@@ -15,35 +15,35 @@ namespace TheBookshelf.Presentation.Controllers
 
         
         [HttpGet("{id:guid}",Name ="CategoryById")]
-        public IActionResult GetCategory(Guid id)
+        public async Task<IActionResult> GetCategory(Guid id)
         {
-            var category = _service.CategoryService.GetCategory(id,trackChanges:false);
+            var category = await _service.CategoryService.GetCategoryAsync(id,trackChanges:false);
             return Ok(category);
         }
 
         [HttpGet]
-        public IActionResult GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            var categories = _service.CategoryService.GetAllCategories(trackChanges: false);
+            var categories = await _service.CategoryService.GetAllCategoriesAsync(trackChanges: false);
             return Ok(categories);
         }
 
         [HttpGet("collection/({ids})", Name ="CategoryCollection")]
-        public IActionResult GetCategoryCollection([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            var categories = _service.CategoryService.GetByIds(ids,trackChanges:false);
+            var categories = await _service.CategoryService.GetByIdsAsync(ids,trackChanges:false);
             return Ok(categories);
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteCategory(Guid id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            _service.CategoryService.DeleteCategory(id, trackChanges:false);
+            await _service.CategoryService.DeleteCategoryAsync(id, trackChanges:false);
             return NoContent();
         }
 
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] CategoryForCreationDto category)
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto category)
         {
             if (category is null)
             {
@@ -53,20 +53,20 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            var createdCategory = _service.CategoryService.CreateCategory(category);
+            var createdCategory = await _service.CategoryService.CreateCategoryAsync(category);
 
             return CreatedAtRoute("CategoryById", new {id=createdCategory.Id},createdCategory);
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateCategoryCollection([FromBody] IEnumerable<CategoryForCreationDto> categoryCollection)
+        public async Task<IActionResult> CreateCategoryCollection([FromBody] IEnumerable<CategoryForCreationDto> categoryCollection)
         {
-            var result = _service.CategoryService.CreateCategoryCollection(categoryCollection);
+            var result = await _service.CategoryService.CreateCategoryCollectionAsync(categoryCollection);
             return CreatedAtRoute("CategoryCollection", new { result.ids }, result.categories);
         }
         
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateCategory(Guid id, [FromBody] CategoryForUpdateDto category)
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryForUpdateDto category)
         {
             if (category is null)
             {
@@ -76,7 +76,7 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            _service.CategoryService.UpdateCategory(id, category, trackChanges:true);
+            await _service.CategoryService.UpdateCategoryAsync(id, category, trackChanges:true);
             return NoContent();
         }
     }

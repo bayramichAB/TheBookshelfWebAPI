@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,30 @@ namespace Repository
         {
 
         }
+        
+        public async Task<Book?> GetSingleBookAsync(Guid bookId, bool trackChanges) => 
+            await FindByCondition(b => b.Id.Equals(bookId), trackChanges).SingleOrDefaultAsync();
+        
+        public async Task<IEnumerable<Book>> GetAllBooksAsync(bool trackChanges) => 
+            await FindAll(trackChanges).OrderBy(b => b.Name).ToListAsync();
+        
+        public async Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid Id, bool trackChanges) =>
+            await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.Id.Equals(Id), trackChanges).SingleOrDefaultAsync();
+
+        public async Task<IEnumerable<Book>> GetBooksForCategoryAsync(Guid categoryId, bool trackChanges) =>
+            await FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b=>b.Name).ToListAsync();
+
+        public async Task<Book?> GetAuthorBookAsync(Guid authorId, Guid bookId, bool trackChanges) =>
+            await FindByCondition(a => a.AuthorID.Equals(authorId) && a.Id.Equals(bookId), trackChanges).SingleOrDefaultAsync();
+
+        public async Task<IEnumerable<Book>> GetAuthorBooksAsync(Guid authorId, bool trackChanges) =>
+            await FindByCondition(a => a.AuthorID.Equals(authorId), trackChanges).OrderBy(a => a.Name).ToListAsync();
+
+        public async Task<Book?> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, Guid id, bool trackChanges) =>
+            await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId) && b.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
+        
+        public async Task<IEnumerable<Book>> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, bool trackChanges) =>
+            await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId), trackChanges).ToListAsync();
 
         public void CreateBook(Guid categoryId, Guid authorId, Book book)
         {
@@ -23,28 +48,5 @@ namespace Repository
         }
 
         public void DeleteBook(Book book) => Delete(book);
-
-        public IEnumerable<Book> GetAllBooks(bool trackChanges) => FindAll(trackChanges).OrderBy(b=>b.Name).ToList();
-
-        public Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges) =>
-            FindByCondition(a => a.AuthorID.Equals(authorId) && a.Id.Equals(bookId), trackChanges).SingleOrDefault();
-
-        public IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges) =>
-            FindByCondition(a => a.AuthorID.Equals(authorId), trackChanges).OrderBy(a => a.Name).ToList();
-
-        public Book? GetBookForCategory(Guid categoryId, Guid Id, bool trackChanges) =>
-            FindByCondition(b => b.CategoryID.Equals(categoryId) && b.Id.Equals(Id), trackChanges).SingleOrDefault();
-
-        public Book? GetSingleBook(Guid bookId, bool trackChanges) => FindByCondition(b => b.Id.Equals(bookId), trackChanges).SingleOrDefault();
-
-        public IEnumerable<Book> GetBooksForCategory(Guid categoryId, bool trackChanges) =>
-            FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b=>b.Name).ToList();
-
-
-        public IEnumerable<Book> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId, bool trackChanges) =>
-            FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId), trackChanges).ToList();
-
-        public Book? GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id, bool trackChanges) =>
-            FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId) && b.Id.Equals(id), trackChanges).SingleOrDefault();
     }
 }

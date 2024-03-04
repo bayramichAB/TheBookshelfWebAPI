@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +15,17 @@ namespace Repository
         {
         }
 
-        public void DeleteCategory(Category category) => Delete(category);
+        public async Task<Category?> GetCategoryAsync(Guid categoryId, bool trackChanges) =>
+            await FindByCondition(c => c.Id.Equals(categoryId), trackChanges).SingleOrDefaultAsync();
 
-        public IEnumerable<Category> GetByIds(IEnumerable<Guid> ids, bool trackChanges) => 
-            FindByCondition(c => ids.Contains(c.Id), trackChanges).ToList();
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync(bool trackChanges)=>
+            await FindAll(trackChanges).OrderBy(c=>c.Name).ToListAsync();
 
-        public void CreateCategory(Category category) => Create(category);
+         public async Task<IEnumerable<Category>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) => 
+            await FindByCondition(c => ids.Contains(c.Id), trackChanges).ToListAsync();
 
-        public IEnumerable<Category> GetAllCategories(bool trackChanges)=>FindAll(trackChanges)
-            .OrderBy(c=>c.Name).ToList();
+         public void CreateCategory(Category category) => Create(category);
 
-        public Category? GetCategory(Guid categoryId, bool trackChanges) =>
-            FindByCondition(c => c.Id.Equals(categoryId), trackChanges).SingleOrDefault();
+         public void DeleteCategory(Category category) => Delete(category);
     }
 }

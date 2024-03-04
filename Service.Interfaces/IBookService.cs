@@ -10,32 +10,32 @@ namespace Service.Interfaces
 {
     public interface IBookService
     {
-        BookDto GetSingleBook(Guid bookId,bool trackChanges);
+        Task<BookDto> GetSingleBookAsync(Guid bookId,bool trackChanges);
 
-        IEnumerable<BookDto> GetAllBooks(bool trackChanges);
+        Task<IEnumerable<BookDto>> GetAllBooksAsync(bool trackChanges);
 
-        BookDto GetCategoryBook(Guid categoryId, Guid Id, bool trackChanges);
+        Task<BookDto> GetCategoryBookAsync(Guid categoryId, Guid Id, bool trackChanges);
 
-        BookDto GetAuthorBook(Guid authorId, Guid Id, bool trackChanges);
+        Task<BookDto> GetAuthorBookAsync(Guid authorId, Guid Id, bool trackChanges);
 
-        IEnumerable<BookDto> GetCategoryBooks(Guid categoryId,bool trackChanges);
+        Task<IEnumerable<BookDto>> GetCategoryBooksAsync(Guid categoryId,bool trackChanges);
 
-        IEnumerable<BookDto> GetAuthorBooks(Guid authorId, bool trackChanges);
+        Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges);
 
-        BookDto GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid Id, bool trackChanges);
+        Task<BookDto> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid Id, bool trackChanges);
 
-        IEnumerable<BookDto> GetBooksForCategoryAndAuthor(Guid categoryId,Guid authorId,bool trackChanges);
+        Task<IEnumerable<BookDto>> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,bool trackChanges);
 
-        BookDto CreateBook(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges);
+        Task<BookDto> CreateBookAsync(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges);
 
-        void DeleteBook(Guid categoryId,Guid authorId,Guid id,bool trackChanges);
+        Task DeleteBookAsync(Guid categoryId,Guid authorId,Guid id,bool trackChanges);
 
-        void UpdateBookForCategoryAndAuthor(Guid categoryId, Guid authorId, Guid id,BookForUpdateDto bookForUpdateDto,
+        Task UpdateBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, Guid id,BookForUpdateDto bookForUpdateDto,
             bool catTrackChanges,bool authTrackChanges,bool bookTrackChanges);
 
-        (BookForUpdateDto bookToPatch, Book bookEntity) GetBookForPatch(Guid categoryId, Guid id,
+        Task<(BookForUpdateDto bookToPatch, Book bookEntity)> GetBookForPatchAsync(Guid categoryId, Guid id,
             bool catTrackChanges, bool bookTrackChanges);
 
-        void SaveChangesForPatch(BookForUpdateDto bookToPatch, Book bookEntity);
+        Task SaveChangesForPatchAsync(BookForUpdateDto bookToPatch, Book bookEntity);
     }
 }

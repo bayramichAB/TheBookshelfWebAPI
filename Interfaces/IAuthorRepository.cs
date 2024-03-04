@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 namespace Interfaces
 {
     public interface IAuthorRepository
-    {
-        IEnumerable<Author> GetAllAuthors(bool trackChanges);
-        Author? GetAuthor(Guid authorId, bool trachChanges);
+    {     
+        Task<Author?> GetAuthorAsync(Guid authorId, bool trachChanges);
+
+        Task<IEnumerable<Author>> GetAllAuthorsAsync(bool trackChanges);
+        
         void CreateAuthor(Author author);
+
         void DeleteAuthor(Author author);
     }
 }

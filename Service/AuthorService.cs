@@ -25,9 +25,9 @@ namespace Service
             _mapper = mapper;
         }
 
-        public AuthorDto GetAuthor(Guid authorId, bool trackChanges)
+        public async Task<AuthorDto> GetAuthorAsync(Guid authorId, bool trackChanges)
         {
-            var author = _repository.Author.GetAuthor(authorId,trackChanges);
+            var author = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
             if (author is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
@@ -37,41 +37,41 @@ namespace Service
             return authorDto;
         }  
 
-        public IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges)
+        public async Task<IEnumerable<AuthorDto>> GetAllAuthorsAsync(bool trackChanges)
         {
-            var authors = _repository.Author.GetAllAuthors(trackChanges);
+            var authors = await _repository.Author.GetAllAuthorsAsync(trackChanges);
             
-            var authersDto=_mapper.Map<IEnumerable<AuthorDto>>(authors);
+            var authersDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);
 
             return authersDto;
         }
 
-        public AuthorDto CreateAuthor(AuthorForCreationDto author)
+        public async Task<AuthorDto> CreateAuthorAsync(AuthorForCreationDto author)
         {
             var authorEntity = _mapper.Map<Author>(author);
 
             _repository.Author.CreateAuthor(authorEntity);
-            _repository.Save();
+            await _repository.Save();
 
             var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
             return authorToReturn;
         }  
 
-        public void DeleteAuthor(Guid authorId,bool trackChanges)
+        public async Task DeleteAuthorAsync(Guid authorId,bool trackChanges)
         {
-            var author = _repository.Author.GetAuthor(authorId,trackChanges);
+            var author = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
             if (author is null)
             {
                 throw new AuthorNotFoundExeption(authorId);
             }
 
             _repository.Author.DeleteAuthor(author);
-            _repository.Save();
+            await _repository.Save();
         }
 
-        public void UpdateAuthor(Guid authorId, AuthorForUpdateDto authorForUpdate,bool trackChanges)
+        public async Task UpdateAuthorAsync(Guid authorId, AuthorForUpdateDto authorForUpdate,bool trackChanges)
         {
-            var authorEntity = _repository.Author.GetAuthor(authorId,trackChanges);
+            var authorEntity = await _repository.Author.GetAuthorAsync(authorId,trackChanges);
 
             if (authorEntity is null)
             {
@@ -79,7 +79,7 @@ namespace Service
             }
 
             _mapper.Map(authorForUpdate,authorEntity);
-            _repository.Save();
+            await _repository.Save();
         }
     }
 }

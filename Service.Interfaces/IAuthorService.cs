@@ -9,14 +9,14 @@ namespace Service.Interfaces
 {
     public interface IAuthorService
     {
-        AuthorDto GetAuthor(Guid Id, bool trackChanges); 
+        Task<AuthorDto> GetAuthorAsync(Guid Id, bool trackChanges); 
 
-        IEnumerable<AuthorDto> GetAllAuthors(bool trackChanges);
+        Task<IEnumerable<AuthorDto>> GetAllAuthorsAsync(bool trackChanges);
 
-        AuthorDto CreateAuthor(AuthorForCreationDto author); 
+        Task<AuthorDto> CreateAuthorAsync(AuthorForCreationDto author); 
 
-        void DeleteAuthor(Guid authorId, bool trackChanges);
+        Task DeleteAuthorAsync(Guid authorId, bool trackChanges);
 
-        void UpdateAuthor(Guid authorId, AuthorForUpdateDto authorForUpdateDto,bool trackChanges);
+        Task UpdateAuthorAsync(Guid authorId, AuthorForUpdateDto authorForUpdateDto,bool trackChanges);
     }
 }

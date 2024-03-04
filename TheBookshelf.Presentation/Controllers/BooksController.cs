@@ -18,71 +18,71 @@ namespace TheBookshelf.Presentation.Controllers
         public BooksController(IServiceManager service)=>_service = service;
 
         [HttpGet("api/books")]
-        public IActionResult GetAllBooks()
+        public async Task<IActionResult> GetAllBooks()
         {
-            var books = _service.BookService.GetAllBooks(trackChanges:false);
+            var books = await _service.BookService.GetAllBooksAsync(trackChanges:false);
             return Ok(books);
         }
 
 
         [HttpGet("api/books/{bookId:guid}")]
-        public IActionResult GetBook(Guid bookId)
+        public async Task<IActionResult> GetBook(Guid bookId)
         {
-            var book = _service.BookService.GetSingleBook(bookId,trackChanges:false);
+            var book = await _service.BookService.GetSingleBookAsync(bookId,trackChanges:false);
             return Ok(book);
         }
 
 
         [HttpGet("api/categories/{categoryId}/books")]
-        public IActionResult GetBooksForCategory(Guid categoryId)
+        public async Task<IActionResult> GetBooksForCategory(Guid categoryId)
         {
-            var books = _service.BookService.GetCategoryBooks(categoryId,trackChanges:false);
+            var books = await _service.BookService.GetCategoryBooksAsync(categoryId,trackChanges:false);
             return Ok(books);
         }
 
 
         [HttpGet("api/categories/{categoryId}/books/{id:guid}",Name = "GetBookForCategory")]
-        public IActionResult GetBookForCategory(Guid categoryId, Guid Id)
+        public async Task<IActionResult> GetBookForCategory(Guid categoryId, Guid Id)
         {
-            var book = _service.BookService.GetCategoryBook(categoryId, Id, trackChanges:false);
+            var book = await _service.BookService.GetCategoryBookAsync(categoryId, Id, trackChanges:false);
             return Ok(book);
         }
 
 
         [HttpGet("api/authors/{authorId}/books")]
-        public IActionResult GetBooksForAuthor(Guid authorId)
+        public async Task<IActionResult> GetBooksForAuthor(Guid authorId)
         {
-            var books = _service.BookService.GetAuthorBooks(authorId, trackChanges: false);
+            var books = await _service.BookService.GetAuthorBooksAsync(authorId, trackChanges: false);
             return Ok(books);
         }
 
 
         [HttpGet("api/authors/{authorId}/books/{id:guid}")]
-        public IActionResult GetBookForAuthor(Guid authorId, Guid Id)
+        public async Task<IActionResult> GetBookForAuthor(Guid authorId, Guid Id)
         {
-            var book = _service.BookService.GetAuthorBook(authorId,Id, trackChanges: false);
+            var book = await _service.BookService.GetAuthorBookAsync(authorId,Id, trackChanges: false);
             return Ok(book);
         }
 
 
         [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBooksForCategoryAndAuthor")]
-        public IActionResult GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId)
+        public async Task<IActionResult> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId)
         {
-            var book = _service.BookService.GetBooksForCategoryAndAuthor(categoryId,authorId,trackChanges:false);
+            var book = await _service.BookService.GetBooksForCategoryAndAuthorAsync(categoryId,authorId,trackChanges:false);
             return Ok(book);
         }
 
 
         [HttpGet("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
-        public IActionResult GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid Id)
+        public async Task<IActionResult> GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid Id)
         {
-            var book = _service.BookService.GetBookForCategoryAndAuthor(categoryId, authorId, Id, trackChanges: false);
+            var book = await _service.BookService.GetBookForCategoryAndAuthorAsync(categoryId, authorId, Id, trackChanges: false);
             return Ok(book);
         }
 
 
         [HttpPost("api/categories/{categoryId}/authors/{authorId}/books")]
-        public IActionResult CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
+        public async Task<IActionResult> CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
         {
             if (book is null)
                 return BadRequest("BookForCreationDto is null");
@@ -90,21 +90,21 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            var bookToReturn = _service.BookService.CreateBook(categoryId,authorId, book, trackChanges: false);
+            var bookToReturn = await _service.BookService.CreateBookAsync(categoryId,authorId, book, trackChanges: false);
 
             return CreatedAtRoute("GetBooksForCategoryAndAuthor", new { categoryId, authorId, id = bookToReturn.Id }, bookToReturn);
         }
 
 
         [HttpDelete("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
-        public IActionResult DeleteBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id)
+        public async Task<IActionResult> DeleteBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id)
         {
-            _service.BookService.DeleteBook(categoryId, authorId, id, trackChanges: false);
+            await _service.BookService.DeleteBookAsync(categoryId, authorId, id, trackChanges: false);
             return NoContent();
         }
 
         [HttpPut("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
-        public IActionResult UpdateBookForCategoryAndAuthor(Guid categoryId,Guid authorId,Guid id,
+        public async Task<IActionResult> UpdateBookForCategoryAndAuthor(Guid categoryId,Guid authorId,Guid id,
             [FromBody] BookForUpdateDto book)
         {
             if (book is null)
@@ -115,22 +115,21 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            _service.BookService.UpdateBookForCategoryAndAuthor(categoryId,authorId,id,book,
+            await _service.BookService.UpdateBookForCategoryAndAuthorAsync(categoryId,authorId,id,book,
                 catTrackChanges:false,authTrackChanges:false,bookTrackChanges:true);
             return NoContent();
         }
 
 
-        
         [HttpPatch("api/categories/{categoryId}/books/{id:guid}")]
-        public IActionResult PartiallyUpdateBookForCategory(Guid categoryId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateBookForCategory(Guid categoryId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc is null)
             {
                 return BadRequest("patchDoc object is null");
             }
 
-            var result = _service.BookService.GetBookForPatch(categoryId,id,catTrackChanges:false,bookTrackChanges:true);
+            var result = await _service.BookService.GetBookForPatchAsync(categoryId,id,catTrackChanges:false,bookTrackChanges:true);
             patchDoc.ApplyTo(result.bookToPatch,ModelState);
 
             TryValidateModel(result.bookToPatch);
@@ -139,7 +138,7 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            _service.BookService.SaveChangesForPatch(result.bookToPatch,result.bookEntity);
+            await _service.BookService.SaveChangesForPatchAsync(result.bookToPatch,result.bookEntity);
             return NoContent();
         }
     }

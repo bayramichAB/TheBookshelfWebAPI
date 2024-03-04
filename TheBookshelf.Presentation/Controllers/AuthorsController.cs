@@ -18,21 +18,21 @@ namespace TheBookshelf.Presentation.Controllers
         
 
         [HttpGet("{id:guid}", Name = "AuthorById")]
-        public IActionResult GetAuthor(Guid Id)
+        public async Task<IActionResult> GetAuthor(Guid Id)
         {
-            var author = _serviceManager.AuthorService.GetAuthor(Id,trackChanges:false);
+            var author = await _serviceManager.AuthorService.GetAuthorAsync(Id,trackChanges:false);
             return Ok(author);
         }
 
         [HttpGet]
-        public IActionResult GetAuthors()
+        public async Task<IActionResult> GetAuthors()
         {
-            var authors = _serviceManager.AuthorService.GetAllAuthors(trackChanges:false);
+            var authors = await _serviceManager.AuthorService.GetAllAuthorsAsync(trackChanges:false);
             return Ok(authors);
         }
 
         [HttpPost]
-        public IActionResult CreateAuthor([FromBody] AuthorForCreationDto author)
+        public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto author)
         {
             if (author is null)
             {
@@ -42,19 +42,19 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            var createdAuthor = _serviceManager.AuthorService.CreateAuthor(author);
+            var createdAuthor = await _serviceManager.AuthorService.CreateAuthorAsync(author);
             return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteAuthor(Guid id)
+        public async Task <IActionResult> DeleteAuthor(Guid id)
         {
-            _serviceManager.AuthorService.DeleteAuthor(id, trackChanges: false);
+            await _serviceManager.AuthorService.DeleteAuthorAsync(id, trackChanges: false);
             return NoContent();
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateAuthor(Guid id, [FromBody] AuthorForUpdateDto author)
+        public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody] AuthorForUpdateDto author)
         {
             if (author is null)
             {
@@ -64,7 +64,7 @@ namespace TheBookshelf.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            _serviceManager.AuthorService.UpdateAuthor(id, author, trackChanges: true);
+            await _serviceManager.AuthorService.UpdateAuthorAsync(id, author, trackChanges: true);
             return NoContent();
         }
         

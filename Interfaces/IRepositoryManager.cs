@@ -12,6 +12,6 @@ namespace Interfaces
         IBookRepository Book { get; }
         ICategoryRepository Category { get; }
 
-        void Save();
+        Task Save();
     }
 }

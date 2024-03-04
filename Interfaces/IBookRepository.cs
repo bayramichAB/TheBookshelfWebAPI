@@ -8,21 +8,28 @@ using System.Threading.Tasks;
 namespace Interfaces
 {
     public interface IBookRepository
-    {
-        IEnumerable<Book> GetBooksForCategory(Guid categoryId, bool trackChanges);
-        Book? GetBookForCategory(Guid categoryId, Guid bookId, bool trackChanges);
-        Book? GetAuthorBook(Guid authorId, Guid bookId, bool trackChanges);
+    {    
+        Task<Book?> GetSingleBookAsync(Guid bookId,bool trackChanges);
 
-        IEnumerable<Book> GetBooksForCategoryAndAuthor(Guid categoryId,Guid authorId,bool trackChanges);
+        Task<IEnumerable<Book>> GetAllBooksAsync(bool trackChanges);
 
-        Book? GetBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id, bool trackChanges);
+        Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid bookId, bool trackChanges);
 
-        IEnumerable<Book> GetAuthorBooks(Guid authorId, bool trackChanges);
+        Task<IEnumerable<Book>> GetBooksForCategoryAsync(Guid categoryId, bool trackChanges);
+        
+        Task<Book?> GetAuthorBookAsync(Guid authorId, Guid bookId, bool trackChanges);
+        
+        Task<IEnumerable<Book>> GetAuthorBooksAsync(Guid authorId, bool trackChanges);
+        
+        Task<Book?> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid id, bool trackChanges);
+
+        Task<IEnumerable<Book>> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,bool trackChanges);
+
         void CreateBook(Guid categoryId,Guid authorId,Book book);
         void DeleteBook(Book book);
 
 
-        IEnumerable<Book> GetAllBooks(bool trackChanges);
-        Book? GetSingleBook(Guid bookId,bool trackChanges);
+        
+        
     }
 }

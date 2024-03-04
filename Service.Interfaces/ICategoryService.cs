@@ -9,18 +9,18 @@ namespace Service.Interfaces
 {
     public interface ICategoryService
     {   
-        CategoryDto GetCategory(Guid categoryId,bool trackChanges);
+        Task<CategoryDto> GetCategoryAsync(Guid categoryId,bool trackChanges);
 
-        IEnumerable<CategoryDto> GetAllCategories(bool trackChanges);
+        Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(bool trackChanges);
         
-        IEnumerable<CategoryDto> GetByIds(IEnumerable<Guid> ids,bool trackChanges);
+        Task<IEnumerable<CategoryDto>> GetByIdsAsync(IEnumerable<Guid> ids,bool trackChanges);
 
-        CategoryDto CreateCategory(CategoryForCreationDto category);
+        Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto category);
 
-        (IEnumerable<CategoryDto> categories, string ids) CreateCategoryCollection(IEnumerable<CategoryForCreationDto> categoryCollection);
+        Task<(IEnumerable<CategoryDto> categories, string ids)> CreateCategoryCollectionAsync(IEnumerable<CategoryForCreationDto> categoryCollection);
         
-        void DeleteCategory(Guid categoryId, bool trackChanges);
+        Task DeleteCategoryAsync(Guid categoryId, bool trackChanges);
 
-        void UpdateCategory(Guid categoryId, CategoryForUpdateDto categoryForUpdate, bool trackChanges);
+        Task UpdateCategoryAsync(Guid categoryId, CategoryForUpdateDto categoryForUpdate, bool trackChanges);
     }
 }
