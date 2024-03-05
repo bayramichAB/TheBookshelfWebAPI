@@ -8,5 +8,16 @@ namespace Shared.RequestFeatures
 {
     public class BookParameters : RequestParameters
     {
+        public decimal MinPrice {  get; set; }
+        public decimal MaxPrice { get; set; } = 1000;
+
+        public bool ValidPriceRange => MaxPrice > MinPrice;
+
+        public bool? availableBook { get; set; }
+    }
+
+    public abstract class BookAvailable
+    {
+        
     }
 }
