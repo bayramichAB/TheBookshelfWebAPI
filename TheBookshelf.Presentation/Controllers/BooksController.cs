@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TheBookshelf.Presentation.ActionFilters;
 
@@ -35,10 +37,14 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/categories/{categoryId}/books")]
-        public async Task<IActionResult> GetBooksForCategory(Guid categoryId)
+        public async Task<IActionResult> GetBooksForCategory(Guid categoryId,
+            [FromQuery] BookParameters bookParameters)
         {
-            var books = await _service.BookService.GetCategoryBooksAsync(categoryId,trackChanges:false);
-            return Ok(books);
+            var pageResult = await _service.BookService.GetCategoryBooksAsync(categoryId,bookParameters,trackChanges:false);
+            
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
+
+            return Ok(pageResult.books);
         }
 
 

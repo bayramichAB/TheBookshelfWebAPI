@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Service.Interfaces
 
         Task<BookDto> GetAuthorBookAsync(Guid authorId, Guid Id, bool trackChanges);
 
-        Task<IEnumerable<BookDto>> GetCategoryBooksAsync(Guid categoryId,bool trackChanges);
+        Task<(IEnumerable<BookDto> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters,bool trackChanges);
 
         Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges);
 

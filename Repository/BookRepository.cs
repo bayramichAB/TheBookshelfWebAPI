@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,12 @@ namespace Repository
         public async Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid Id, bool trackChanges) =>
             await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.Id.Equals(Id), trackChanges).SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Book>> GetBooksForCategoryAsync(Guid categoryId, bool trackChanges) =>
-            await FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b=>b.Name).ToListAsync();
+        public async Task<PagedList<Book>> GetBooksForCategoryAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
+        {
+            var books = await FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges).OrderBy(b => b.Name).ToListAsync();
+
+            return PagedList<Book>.ToPagedList(books,bookParameters.PageNumber, bookParameters.PageSize);
+        }
 
         public async Task<Book?> GetAuthorBookAsync(Guid authorId, Guid bookId, bool trackChanges) =>
             await FindByCondition(a => a.AuthorID.Equals(authorId) && a.Id.Equals(bookId), trackChanges).SingleOrDefaultAsync();

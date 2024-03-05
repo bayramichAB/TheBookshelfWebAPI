@@ -4,6 +4,7 @@ using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,14 +98,14 @@ namespace Service
             return bookDto;
         }
         
-        public async Task<IEnumerable<BookDto>> GetCategoryBooksAsync(Guid categoryId, bool trackChanges)
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters, bool trackChanges)
         {
             var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
-            var books = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId,trackChanges);
-            var booksDto=_mapper.Map<IEnumerable< BookDto>>(books);
+            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId,bookParameters,trackChanges);
+            var booksDto = _mapper.Map<IEnumerable< BookDto>>(booksWithMetaData);
 
-            return booksDto;
+            return (books: booksDto, metaData: booksWithMetaData.MetaData);
         }
 
         public async Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges)

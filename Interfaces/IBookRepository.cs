@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Interfaces
 
         Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid bookId, bool trackChanges);
 
-        Task<IEnumerable<Book>> GetBooksForCategoryAsync(Guid categoryId, bool trackChanges);
+        Task<PagedList<Book>> GetBooksForCategoryAsync(Guid categoryId,BookParameters bookParameters, bool trackChanges);
         
         Task<Book?> GetAuthorBookAsync(Guid authorId, Guid bookId, bool trackChanges);
         
