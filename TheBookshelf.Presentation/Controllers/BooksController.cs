@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
@@ -21,10 +22,13 @@ namespace TheBookshelf.Presentation.Controllers
         public BooksController(IServiceManager service)=>_service = service;
 
         [HttpGet("api/books")]
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetAllBooks([FromQuery] BookParameters bookParameters)
         {
-            var books = await _service.BookService.GetAllBooksAsync(trackChanges:false);
-            return Ok(books);
+            var pageResult = await _service.BookService.GetAllBooksAsync(bookParameters,trackChanges:false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
+
+            return Ok(pageResult.books);
         }
 
 
@@ -57,10 +61,13 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/authors/{authorId}/books")]
-        public async Task<IActionResult> GetBooksForAuthor(Guid authorId)
+        public async Task<IActionResult> GetBooksForAuthor(Guid authorId, [FromQuery] BookParameters bookParameters)
         {
-            var books = await _service.BookService.GetAuthorBooksAsync(authorId, trackChanges: false);
-            return Ok(books);
+            var pageResult = await _service.BookService.GetAuthorBooksAsync(authorId,bookParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
+
+            return Ok(pageResult.books);
         }
 
 
@@ -73,10 +80,13 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBooksForCategoryAndAuthor")]
-        public async Task<IActionResult> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId)
+        public async Task<IActionResult> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId,[FromQuery]BookParameters bookParameters)
         {
-            var book = await _service.BookService.GetBooksForCategoryAndAuthorAsync(categoryId,authorId,trackChanges:false);
-            return Ok(book);
+            var pageResult = await _service.BookService.GetBooksForCategoryAndAuthorAsync(categoryId,authorId,bookParameters,trackChanges:false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
+            
+            return Ok(pageResult.books);
         }
 
 

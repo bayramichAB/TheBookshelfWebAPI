@@ -12,7 +12,7 @@ namespace Interfaces
     {    
         Task<Book?> GetSingleBookAsync(Guid bookId,bool trackChanges);
 
-        Task<IEnumerable<Book>> GetAllBooksAsync(bool trackChanges);
+        Task<PagedList<Book>> GetAllBooksAsync(BookParameters bookParameters,bool trackChanges);
 
         Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid bookId, bool trackChanges);
 
@@ -20,11 +20,11 @@ namespace Interfaces
         
         Task<Book?> GetAuthorBookAsync(Guid authorId, Guid bookId, bool trackChanges);
         
-        Task<IEnumerable<Book>> GetAuthorBooksAsync(Guid authorId, bool trackChanges);
+        Task<PagedList<Book>> GetAuthorBooksAsync(Guid authorId, BookParameters bookParameters, bool trackChanges);
         
         Task<Book?> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid id, bool trackChanges);
 
-        Task<IEnumerable<Book>> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,bool trackChanges);
+        Task<PagedList<Book>> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,BookParameters bookParameters,bool trackChanges);
 
         void CreateBook(Guid categoryId,Guid authorId,Book book);
         void DeleteBook(Book book);

@@ -62,11 +62,11 @@ namespace Service
             return bookDto;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(bool trackChanges)
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooksAsync(BookParameters bookParameters,bool trackChanges)
         {
-            var books = await _repositoryManager.Book.GetAllBooksAsync(trackChanges);
-            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return booksDto;
+            var booksWithMetaData = await _repositoryManager.Book.GetAllBooksAsync(bookParameters,trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
+            return (books:booksDto, metaData: booksWithMetaData.MetaData);
         } 
 
         public async Task<BookDto> GetCategoryBookAsync(Guid categoryId, Guid Id, bool trackChanges)
@@ -108,13 +108,13 @@ namespace Service
             return (books: booksDto, metaData: booksWithMetaData.MetaData);
         }
 
-        public async Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges)
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges)
         {
             var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
-            var books = await _repositoryManager.Book.GetAuthorBooksAsync(authorId, trackChanges);
-            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return booksDto;
+            var booksWithMetaData = await _repositoryManager.Book.GetAuthorBooksAsync(authorId,bookParameters, trackChanges);
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
+            return (books: booksDto, metaData: booksWithMetaData.MetaData);
         }  
         
         public async Task<BookDto> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid id, bool trackChanges)
@@ -133,16 +133,16 @@ namespace Service
             return bookDto;
         }
 
-        public async Task<IEnumerable<BookDto>> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, bool trackChanges)
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, BookParameters bookParameters, bool trackChanges)
         {
-            var category = await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
+             await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
-            var author = await GetAuthorAndCheckIfItExists(authorId, trackChanges);
+             await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
-            var books = await _repositoryManager.Book.GetBooksForCategoryAndAuthorAsync(categoryId, authorId, trackChanges);
+            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAndAuthorAsync(categoryId, authorId,bookParameters, trackChanges);
 
-            var bookDto = _mapper.Map<IEnumerable<BookDto>>(books);
-            return bookDto;
+            var bookDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
+            return (books: bookDto, metaData: booksWithMetaData.MetaData);
         }
 
         public async Task<BookDto> CreateBookAsync(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges)

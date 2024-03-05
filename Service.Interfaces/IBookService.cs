@@ -13,7 +13,7 @@ namespace Service.Interfaces
     {
         Task<BookDto> GetSingleBookAsync(Guid bookId,bool trackChanges);
 
-        Task<IEnumerable<BookDto>> GetAllBooksAsync(bool trackChanges);
+        Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooksAsync(BookParameters bookParameters,bool trackChanges);
 
         Task<BookDto> GetCategoryBookAsync(Guid categoryId, Guid Id, bool trackChanges);
 
@@ -21,11 +21,11 @@ namespace Service.Interfaces
 
         Task<(IEnumerable<BookDto> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters,bool trackChanges);
 
-        Task<IEnumerable<BookDto>> GetAuthorBooksAsync(Guid authorId, bool trackChanges);
+        Task<(IEnumerable<BookDto> books,MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges);
 
         Task<BookDto> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId,Guid Id, bool trackChanges);
 
-        Task<IEnumerable<BookDto>> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,bool trackChanges);
+        Task<(IEnumerable<BookDto> books, MetaData metaData)> GetBooksForCategoryAndAuthorAsync(Guid categoryId,Guid authorId,BookParameters bookParameters, bool trackChanges);
 
         Task<BookDto> CreateBookAsync(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges);
 
