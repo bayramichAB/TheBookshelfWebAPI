@@ -27,7 +27,7 @@ namespace Repository
                 .FilterBooks(bookParameters.MinPrice, bookParameters.MaxPrice)
                 .IsBookAvailable(bookParameters.availableBook)
                 .Search(bookParameters.SearchBook)
-                .OrderBy(b => b.Name)
+                .Sort(bookParameters.OrderBy)
                 .ToListAsync();
 
             return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
@@ -41,7 +41,7 @@ namespace Repository
                 .FilterBooks(bookParameters.MinPrice,bookParameters.MaxPrice)
                 .IsBookAvailable(bookParameters.availableBook)
                 .Search(bookParameters.SearchBook)
-                .OrderBy(b => b.Name)
+                .Sort(bookParameters.OrderBy)
                 .ToListAsync();
 
             return PagedList<Book>.ToPagedList(books,bookParameters.PageNumber, bookParameters.PageSize);

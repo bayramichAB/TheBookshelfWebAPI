@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
+using Repository.Extensions.Utility;
 
 namespace Repository.Extensions
 {
@@ -31,6 +34,22 @@ namespace Repository.Extensions
             }
             var lowerCase = searchBook.Trim().ToLower();
             return books.Where(b => b.Name!.ToLower().Contains(lowerCase));
+        }
+
+
+        public static IQueryable<Book> Sort(this IQueryable<Book> books, string? orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+            {
+                return books.OrderBy(b=>b.Name);
+            }
+
+            var orderQuery = OrderQueryBuilder.CreateOrderQuery<Book>(orderByQueryString);
+
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return books.OrderBy(b=>b.Name);
+                
+                return books.OrderBy(orderQuery);
         }
     }
 }

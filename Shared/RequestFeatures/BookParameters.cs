@@ -8,6 +8,7 @@ namespace Shared.RequestFeatures
 {
     public class BookParameters : RequestParameters
     {
+        public BookParameters() => OrderBy = "name";
         public decimal MinPrice {  get; set; }
         public decimal MaxPrice { get; set; } = 1000;
 
