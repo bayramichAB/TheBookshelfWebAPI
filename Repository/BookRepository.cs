@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,13 @@ namespace Repository
 
         public async Task<PagedList<Book>> GetAllBooksAsync(BookParameters bookParameters, bool trackChanges)
         {
-            var books = bookParameters.availableBook is null ?
-                await FindAll(trackChanges).OrderBy(b => b.Name).ToListAsync() :
-                await FindByCondition( (b => b.Available == bookParameters.availableBook), trackChanges).OrderBy(b => b.Name).ToListAsync();
-            
+            var books = await FindAll(trackChanges)
+                .FilterBooks(bookParameters.MinPrice, bookParameters.MaxPrice)
+                .IsBookAvailable(bookParameters.availableBook)
+                .Search(bookParameters.SearchBook)
+                .OrderBy(b => b.Name)
+                .ToListAsync();
+
             return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
         }
         public async Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid Id, bool trackChanges) =>
@@ -33,7 +37,12 @@ namespace Repository
 
         public async Task<PagedList<Book>> GetBooksForCategoryAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
         {
-            var books = await FindByCondition(c => c.CategoryID.Equals(categoryId) && (c.Price>=bookParameters.MinPrice && c.Price<=bookParameters.MaxPrice), trackChanges).OrderBy(b => b.Name).ToListAsync();
+            var books = await FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges)
+                .FilterBooks(bookParameters.MinPrice,bookParameters.MaxPrice)
+                .IsBookAvailable(bookParameters.availableBook)
+                .Search(bookParameters.SearchBook)
+                .OrderBy(b => b.Name)
+                .ToListAsync();
 
             return PagedList<Book>.ToPagedList(books,bookParameters.PageNumber, bookParameters.PageSize);
         }

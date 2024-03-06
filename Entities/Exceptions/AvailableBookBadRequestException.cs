@@ -8,7 +8,7 @@ namespace Entities.Exceptions
 {
     public class AvailableBookBadRequestException : BadRequestException
     {
-        public AvailableBookBadRequestException(): base("available is null ")
+        public AvailableBookBadRequestException(): base("There are not books with this condition ")
         {
             
         }

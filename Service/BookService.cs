@@ -64,8 +64,6 @@ namespace Service
 
         public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooksAsync(BookParameters bookParameters,bool trackChanges)
         {
-            
-
             var booksWithMetaData = await _repositoryManager.Book.GetAllBooksAsync(bookParameters,trackChanges);
             
             var booksDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
@@ -109,9 +107,10 @@ namespace Service
                 throw new MaxPriceRangeBadRequestException();
             }
 
-            await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
+            await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
-            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId,bookParameters,trackChanges);
+            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId, bookParameters, trackChanges);
+
             var booksDto = _mapper.Map<IEnumerable< BookDto>>(booksWithMetaData);
 
             return (books: booksDto, metaData: booksWithMetaData.MetaData);

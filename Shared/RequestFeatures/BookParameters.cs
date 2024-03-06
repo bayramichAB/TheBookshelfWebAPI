@@ -14,10 +14,7 @@ namespace Shared.RequestFeatures
         public bool ValidPriceRange => MaxPrice > MinPrice;
 
         public bool? availableBook { get; set; }
-    }
 
-    public abstract class BookAvailable
-    {
-        
+        public string? SearchBook {  get; set; }
     }
 }
