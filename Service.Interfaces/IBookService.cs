@@ -3,6 +3,7 @@ using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Service.Interfaces
 
         Task<BookDto> GetAuthorBookAsync(Guid authorId, Guid Id, bool trackChanges);
 
-        Task<(IEnumerable<BookDto> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters,bool trackChanges);
+        Task<(IEnumerable<ExpandoObject> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters,bool trackChanges);
 
         Task<(IEnumerable<BookDto> books,MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges);
 

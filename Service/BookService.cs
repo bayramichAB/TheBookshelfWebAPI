@@ -7,6 +7,7 @@ using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,12 +19,15 @@ namespace Service
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<BookDto> _dataShaper;
 
-        public BookService(IRepositoryManager repository,ILoggerManager logger,IMapper mapper)
+        public BookService(IRepositoryManager repository,ILoggerManager logger,IMapper mapper,
+            IDataShaper<BookDto> dataShaper)
         {
             _repositoryManager = repository;
             _loggerManager = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
         private async Task<Category> GetCategoryAndCheckIfItExists(Guid categoryId, bool trackChanges)
@@ -100,7 +104,7 @@ namespace Service
             return bookDto;
         }
 
-        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
+        public async Task<(IEnumerable<ExpandoObject> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
         {
             if (!bookParameters.ValidPriceRange)
             {
@@ -113,7 +117,9 @@ namespace Service
 
             var booksDto = _mapper.Map<IEnumerable< BookDto>>(booksWithMetaData);
 
-            return (books: booksDto, metaData: booksWithMetaData.MetaData);
+            var shapedData = _dataShaper.ShapeData(booksDto, bookParameters.Fields);
+
+            return (books: shapedData, metaData: booksWithMetaData.MetaData);
         }
 
         public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges)

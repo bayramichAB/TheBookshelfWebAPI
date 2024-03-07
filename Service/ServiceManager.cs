@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Interfaces;
 using Service.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace Service
         private readonly Lazy<IBookService> _bookService;
         private readonly Lazy<ICategoryService> _categoryService;
 
-        public ServiceManager(IRepositoryManager repositoryManager,ILoggerManager logger,IMapper mapper)
+        public ServiceManager(IRepositoryManager repositoryManager,ILoggerManager logger,IMapper mapper,
+            IDataShaper<BookDto> dataShaper)
         {
             _authorService = new Lazy<IAuthorService>(()=>new AuthorService(repositoryManager,logger, mapper));
-            _bookService=new Lazy<IBookService>(()=>new  BookService(repositoryManager,logger, mapper));
+            _bookService=new Lazy<IBookService>(()=>new  BookService(repositoryManager,logger, mapper,dataShaper));
             _categoryService= new Lazy<ICategoryService>(()=>new CategoryService(repositoryManager,logger, mapper));
+
         }
 
         public IAuthorService AuthorService => _authorService.Value;
