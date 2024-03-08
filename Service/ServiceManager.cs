@@ -17,10 +17,10 @@ namespace Service
         private readonly Lazy<ICategoryService> _categoryService;
 
         public ServiceManager(IRepositoryManager repositoryManager,ILoggerManager logger,IMapper mapper,
-            IDataShaper<BookDto> dataShaper)
+            IBookLinks bookLinks)
         {
             _authorService = new Lazy<IAuthorService>(()=>new AuthorService(repositoryManager,logger, mapper));
-            _bookService=new Lazy<IBookService>(()=>new  BookService(repositoryManager,logger, mapper,dataShaper));
+            _bookService=new Lazy<IBookService>(()=>new  BookService(repositoryManager,logger, mapper, bookLinks));
             _categoryService= new Lazy<ICategoryService>(()=>new CategoryService(repositoryManager,logger, mapper));
 
         }

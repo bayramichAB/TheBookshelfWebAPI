@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Entities.LinkModels;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Interfaces;
@@ -41,14 +42,17 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/categories/{categoryId}/books")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetBooksForCategory(Guid categoryId,
             [FromQuery] BookParameters bookParameters)
         {
-            var pageResult = await _service.BookService.GetCategoryBooksAsync(categoryId,bookParameters,trackChanges:false);
-            
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
+            var linkParams = new LinkParameters(bookParameters, HttpContext);
 
-            return Ok(pageResult.books);
+            var result = await _service.BookService.GetCategoryBooksAsync(categoryId,linkParams,trackChanges:false);
+            
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metaData));
+
+            return result.linkResponse.HasLinks ? Ok(result.linkResponse.LinkedEntities) : Ok(result.linkResponse.ShapedEntities);
         }
 
 

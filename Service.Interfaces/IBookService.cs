@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.LinkModels;
+using Entities.Models;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System;
@@ -20,7 +21,7 @@ namespace Service.Interfaces
 
         Task<BookDto> GetAuthorBookAsync(Guid authorId, Guid Id, bool trackChanges);
 
-        Task<(IEnumerable<ExpandoObject> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId,BookParameters bookParameters,bool trackChanges);
+        Task<(LinkResponse linkResponse, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId, LinkParameters linkParameters, bool trackChanges);
 
         Task<(IEnumerable<BookDto> books,MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges);
 

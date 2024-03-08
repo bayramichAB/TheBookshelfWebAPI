@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.LinkModels;
 using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
@@ -19,15 +20,15 @@ namespace Service
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
         private readonly IMapper _mapper;
-        private readonly IDataShaper<BookDto> _dataShaper;
+        private readonly IBookLinks _bookLinks;
 
         public BookService(IRepositoryManager repository,ILoggerManager logger,IMapper mapper,
-            IDataShaper<BookDto> dataShaper)
+            IBookLinks bookLinks)
         {
             _repositoryManager = repository;
             _loggerManager = logger;
             _mapper = mapper;
-            _dataShaper = dataShaper;
+            _bookLinks = bookLinks;
         }
 
         private async Task<Category> GetCategoryAndCheckIfItExists(Guid categoryId, bool trackChanges)
@@ -104,22 +105,23 @@ namespace Service
             return bookDto;
         }
 
-        public async Task<(IEnumerable<ExpandoObject> books, MetaData metaData)> GetCategoryBooksAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
+        public async Task<(LinkResponse linkResponse, MetaData metaData)> GetCategoryBooksAsync
+            (Guid categoryId, LinkParameters linkParameters, bool trackChanges)
         {
-            if (!bookParameters.ValidPriceRange)
+            if (!linkParameters.BookParametrs.ValidPriceRange)
             {
                 throw new MaxPriceRangeBadRequestException();
             }
 
             await GetCategoryAndCheckIfItExists(categoryId, trackChanges);
 
-            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId, bookParameters, trackChanges);
+            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAsync(categoryId, linkParameters.BookParametrs, trackChanges);
 
             var booksDto = _mapper.Map<IEnumerable< BookDto>>(booksWithMetaData);
 
-            var shapedData = _dataShaper.ShapeData(booksDto, bookParameters.Fields);
+            var links = _bookLinks.TryGenerateLinks(booksDto, linkParameters.BookParametrs.Fields,categoryId,linkParameters.Context);
 
-            return (books: shapedData, metaData: booksWithMetaData.MetaData);
+            return (linkResponse: links, metaData: booksWithMetaData.MetaData);
         }
 
         public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAuthorBooksAsync(Guid authorId,BookParameters bookParameters, bool trackChanges)

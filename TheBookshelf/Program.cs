@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using TheBookshelf.Presentation.ActionFilters;
 using Shared.DataTransferObjects;
 using Service.DataShaping;
+using TheBookshelf.Utility;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddScoped<IDataShaper<BookDto>,DataShaper<BookDto>>();
+builder.Services.AddScoped<IBookLinks, BookLinks>();
 /*Without this code, our API wouldn’t work, and wouldn’t know where to route incoming requests. 
  *But now, our app will find all of the controllers inside of the Presentation project and 
  *configure them with the framework.*/
@@ -43,6 +46,8 @@ builder.Services.AddControllers(config =>
 }).AddXmlDataContractSerializerFormatters()
   .AddCustomCSVFormatter()
   .AddApplicationPart(typeof(TheBookshelf.Presentation.AssemblyReference).Assembly);
+
+builder.Services.AddCustomMediaTypes();
 
 var app = builder.Build();
 
