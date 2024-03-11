@@ -105,6 +105,7 @@ namespace Service
             return bookDto;
         }
 
+        //current
         public async Task<(LinkResponse linkResponse, MetaData metaData)> GetCategoryBooksAsync
             (Guid categoryId, LinkParameters linkParameters, bool trackChanges)
         {
@@ -149,16 +150,27 @@ namespace Service
             return bookDto;
         }
 
-        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, BookParameters bookParameters, bool trackChanges)
+        //current
+        public async Task<(LinkResponse linkResponse, MetaData metaData)> GetBooksForCategoryAndAuthorAsync
+            (Guid categoryId, Guid authorId, LinkParameters linkParameters, bool trackChanges)
         {
-             await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
+            if (!linkParameters.BookParametrs.ValidPriceRange)
+            {
+                throw new MaxPriceRangeBadRequestException();
+            }
+
+            await GetCategoryAndCheckIfItExists(categoryId,trackChanges);
 
              await GetAuthorAndCheckIfItExists(authorId, trackChanges);
 
-            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAndAuthorAsync(categoryId, authorId,bookParameters, trackChanges);
+            var booksWithMetaData = await _repositoryManager.Book.GetBooksForCategoryAndAuthorAsync(categoryId, authorId,linkParameters.BookParametrs, trackChanges);
 
             var bookDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
-            return (books: bookDto, metaData: booksWithMetaData.MetaData);
+
+            var links = _bookLinks.TryGenerateLinks(bookDto,linkParameters.BookParametrs.Fields,categoryId,authorId,linkParameters.Context);
+
+
+            return (linkResponse: links, metaData: booksWithMetaData.MetaData);
         }
 
         public async Task<BookDto> CreateBookAsync(Guid categoryId,Guid authorId, BookForCreationDto bookForCreation, bool trackChanges)

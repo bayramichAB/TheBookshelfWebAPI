@@ -14,5 +14,6 @@ namespace Interfaces
     public interface IBookLinks
     {
         LinkResponse TryGenerateLinks(IEnumerable<BookDto> booksDto, string? fields, Guid categoryId, HttpContext httpContext);
+        LinkResponse TryGenerateLinks(IEnumerable<BookDto> booksDto, string? fields, Guid categoryId,Guid authorId, HttpContext httpContext);
     }
 }

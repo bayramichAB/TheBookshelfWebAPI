@@ -35,6 +35,7 @@ namespace Repository
         public async Task<Book?> GetBookForCategoryAsync(Guid categoryId, Guid Id, bool trackChanges) =>
             await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.Id.Equals(Id), trackChanges).SingleOrDefaultAsync();
 
+        //current
         public async Task<PagedList<Book>> GetBooksForCategoryAsync(Guid categoryId, BookParameters bookParameters, bool trackChanges)
         {
             var books = await FindByCondition(c => c.CategoryID.Equals(categoryId), trackChanges)
@@ -58,9 +59,17 @@ namespace Repository
         public async Task<Book?> GetBookForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, Guid id, bool trackChanges) =>
             await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId) && b.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
 
+        //current
         public async Task<PagedList<Book>> GetBooksForCategoryAndAuthorAsync(Guid categoryId, Guid authorId, BookParameters bookParameters, bool trackChanges)
         {
-            var books = await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId), trackChanges).ToListAsync();
+            var books = await FindByCondition(b => b.CategoryID.Equals(categoryId) && b.AuthorID.Equals(authorId), trackChanges)
+                .FilterBooks(bookParameters.MinPrice, bookParameters.MaxPrice)
+                .IsBookAvailable(bookParameters.availableBook)
+                .Search(bookParameters.SearchBook)
+                .Sort(bookParameters.OrderBy)
+                .ToListAsync();
+            
+            
             return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
         }
         public void CreateBook(Guid categoryId, Guid authorId, Book book)

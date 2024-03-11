@@ -84,13 +84,16 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBooksForCategoryAndAuthor")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId,[FromQuery]BookParameters bookParameters)
         {
-            var pageResult = await _service.BookService.GetBooksForCategoryAndAuthorAsync(categoryId,authorId,bookParameters,trackChanges:false);
+            var linkParams = new LinkParameters(bookParameters, HttpContext);
 
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageResult.metaData));
-            
-            return Ok(pageResult.books);
+            var result = await _service.BookService.GetBooksForCategoryAndAuthorAsync(categoryId,authorId, linkParams, trackChanges:false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metaData));
+
+            return result.linkResponse.HasLinks ? Ok(result.linkResponse.LinkedEntities) : Ok(result.linkResponse.ShapedEntities);
         }
 
 
