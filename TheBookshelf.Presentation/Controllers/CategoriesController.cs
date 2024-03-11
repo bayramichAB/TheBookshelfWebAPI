@@ -72,5 +72,12 @@ namespace TheBookshelf.Presentation.Controllers
             await _service.CategoryService.UpdateCategoryAsync(id, category, trackChanges:true);
             return NoContent();
         }
+
+        [HttpOptions]
+        public IActionResult GetCategoriesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE");
+            return Ok();
+        }
     }
 }

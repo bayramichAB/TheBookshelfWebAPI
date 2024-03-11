@@ -42,6 +42,7 @@ namespace TheBookshelf.Presentation.Controllers
 
 
         [HttpGet("api/categories/{categoryId}/books")]
+        [HttpHead("api/categories/{categoryId}/books")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetBooksForCategory(Guid categoryId,
             [FromQuery] BookParameters bookParameters)
