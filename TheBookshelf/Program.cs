@@ -25,6 +25,9 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.ConfigureVersioning();
+builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
 
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -40,9 +43,10 @@ builder.Services.AddScoped<IBookLinks, BookLinks>();
  *But now, our app will find all of the controllers inside of the Presentation project and 
  *configure them with the framework.*/
 builder.Services.AddControllers(config => 
-{ config.RespectBrowserAcceptHeader = true; 
-  config.ReturnHttpNotAcceptable = true;
+{   config.RespectBrowserAcceptHeader = true; 
+    config.ReturnHttpNotAcceptable = true;
     config.InputFormatters.Insert(0,GetJsonPatchInputFormatter());
+    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120});
 }).AddXmlDataContractSerializerFormatters()
   .AddCustomCSVFormatter()
   .AddApplicationPart(typeof(TheBookshelf.Presentation.AssemblyReference).Assembly);
@@ -67,6 +71,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 
 app.UseCors("CorsPolicy");
+
+app.UseResponseCaching();
+
+app.UseHttpCacheHeaders();
 
 app.UseAuthorization();
 

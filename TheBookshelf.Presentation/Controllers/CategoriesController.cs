@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using TheBookshelf.Presentation.ActionFilters;
@@ -7,8 +8,10 @@ using TheBookshelf.Presentation.ModelBinders;
 
 namespace TheBookshelf.Presentation.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/categories")]
     [ApiController]
+    //[ResponseCache(CacheProfileName = "120SecondsDuration")]
     public class CategoriesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -16,6 +19,8 @@ namespace TheBookshelf.Presentation.Controllers
 
         
         [HttpGet("{id:guid}",Name ="CategoryById")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCategory(Guid id)
         {
             var category = await _service.CategoryService.GetCategoryAsync(id,trackChanges:false);
