@@ -25,14 +25,14 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(author);
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetAuthors")]
         public async Task<IActionResult> GetAuthors()
         {
             var authors = await _serviceManager.AuthorService.GetAllAuthorsAsync(trackChanges:false);
             return Ok(authors);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateAuthor")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto author)
         {

@@ -22,7 +22,7 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(category);
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCategories")]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _service.CategoryService.GetAllCategoriesAsync(trackChanges: false);
@@ -43,7 +43,7 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateCategory")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto category)
         {
