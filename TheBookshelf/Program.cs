@@ -9,6 +9,7 @@ using TheBookshelf.Presentation.ActionFilters;
 using Shared.DataTransferObjects;
 using Service.DataShaping;
 using TheBookshelf.Utility;
+using AspNetCoreRateLimit;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddHttpContextAccessor();
 
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -69,6 +73,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+app.UseIpRateLimiting();
 
 app.UseCors("CorsPolicy");
 
