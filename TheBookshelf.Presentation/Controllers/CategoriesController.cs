@@ -1,4 +1,5 @@
 ﻿using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
@@ -28,6 +29,7 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
         [HttpGet(Name = "GetCategories")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _service.CategoryService.GetAllCategoriesAsync(trackChanges: false);

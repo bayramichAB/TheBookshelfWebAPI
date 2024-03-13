@@ -11,5 +11,6 @@ namespace Service.Interfaces
         IAuthorService AuthorService { get; }
         IBookService BookService { get; }
         ICategoryService CategoryService { get; }
+        IAuthenticationService AuthenticationService { get; }
     }
 }
