@@ -22,6 +22,10 @@ namespace TheBookshelf.Presentation.Controllers
         private readonly IServiceManager _service;
         public BooksController(IServiceManager service)=>_service = service;
 
+        /// <summary>
+        /// Gets the list of all books
+        /// </summary>
+        /// <returns>The books list</returns>
         [HttpGet("api/books")]
         public async Task<IActionResult> GetAllBooks([FromQuery] BookParameters bookParameters)
         {
@@ -41,6 +45,10 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
 
+        /// <summary>
+        /// Gets the list of books for category id
+        /// </summary>
+        /// <returns>The books list</returns>
         [HttpGet("api/categories/{categoryId}/books")]
         [HttpHead("api/categories/{categoryId}/books")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
@@ -65,6 +73,10 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
 
+        /// <summary>
+        /// Gets the list of books for each author
+        /// </summary>
+        /// <returns>The books list</returns>
         [HttpGet("api/authors/{authorId}/books")]
         public async Task<IActionResult> GetBooksForAuthor(Guid authorId, [FromQuery] BookParameters bookParameters)
         {
@@ -84,6 +96,10 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
 
+        /// <summary>
+        /// Gets the list of books for category id and author id
+        /// </summary>
+        /// <returns>The books list</returns>
         [HttpGet("api/categories/{categoryId}/authors/{authorId}/books", Name = "GetBooksForCategoryAndAuthor")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetBooksForCategoryAndAuthor(Guid categoryId, Guid authorId,[FromQuery]BookParameters bookParameters)
@@ -105,8 +121,19 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(book);
         }
 
+        /// <summary>
+        /// Creates a newly created book
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns>A newly created book</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
+        /// <response code="422">If the model is invalid</response>
 
         [HttpPost("api/categories/{categoryId}/authors/{authorId}/books")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
         {

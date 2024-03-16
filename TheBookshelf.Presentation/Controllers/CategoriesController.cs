@@ -12,6 +12,7 @@ namespace TheBookshelf.Presentation.Controllers
     [ApiVersion("1.0")]
     [Route("api/categories")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     //[ResponseCache(CacheProfileName = "120SecondsDuration")]
     public class CategoriesController : ControllerBase
     {
@@ -27,6 +28,11 @@ namespace TheBookshelf.Presentation.Controllers
             var category = await _service.CategoryService.GetCategoryAsync(id,trackChanges:false);
             return Ok(category);
         }
+
+        /// <summary>
+        /// Gets the list of all categories
+        /// </summary>
+        /// <returns>The categories list</returns>
 
         [HttpGet(Name = "GetCategories")]
         [Authorize(Roles = "Manager")]
@@ -50,7 +56,19 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
+
+        /// <summary>
+        /// Creates a newly created category
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns>A newly created category</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPost(Name = "CreateCategory")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto category)
         {
@@ -83,7 +101,7 @@ namespace TheBookshelf.Presentation.Controllers
         [HttpOptions]
         public IActionResult GetCategoriesOptions()
         {
-            Response.Headers.Add("Allow", "GET, OPTIONS, POST, DELETE");
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
     }

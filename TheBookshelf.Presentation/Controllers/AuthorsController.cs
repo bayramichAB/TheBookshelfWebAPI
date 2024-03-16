@@ -25,6 +25,11 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(author);
         }
 
+        /// <summary>
+        /// Gets the list of all authors
+        /// </summary>
+        /// <returns>The authors list</returns>
+
         [HttpGet(Name = "GetAuthors")]
         public async Task<IActionResult> GetAuthors()
         {
@@ -32,7 +37,19 @@ namespace TheBookshelf.Presentation.Controllers
             return Ok(authors);
         }
 
+        /// <summary>
+        /// Creates a newly created author
+        /// </summary>
+        /// <param name="author"></param>
+        /// <returns>A newly created author</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
+        /// <response code="422">If the model is invalid</response>
+
         [HttpPost(Name = "CreateAuthor")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto author)
         {

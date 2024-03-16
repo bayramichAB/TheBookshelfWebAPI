@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TheBookshelf.Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:TheBookshelf.Presentation.Controllers.AuthorsController.GetAuthors">
+            <summary>
+            Gets the list of all authors
+            </summary>
+            <returns>The authors list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.AuthorsController.CreateAuthor(Shared.DataTransferObjects.AuthorForCreationDto)">
+            <summary>
+            Creates a newly created author
+            </summary>
+            <param name="author"></param>
+            <returns>A newly created author</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.BooksController.GetAllBooks(Shared.RequestFeatures.BookParameters)">
+            <summary>
+            Gets the list of all books
+            </summary>
+            <returns>The books list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.BooksController.GetBooksForCategory(System.Guid,Shared.RequestFeatures.BookParameters)">
+            <summary>
+            Gets the list of books for category id
+            </summary>
+            <returns>The books list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.BooksController.GetBooksForAuthor(System.Guid,Shared.RequestFeatures.BookParameters)">
+            <summary>
+            Gets the list of books for each author
+            </summary>
+            <returns>The books list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.BooksController.GetBooksForCategoryAndAuthor(System.Guid,System.Guid,Shared.RequestFeatures.BookParameters)">
+            <summary>
+            Gets the list of books for category id and author id
+            </summary>
+            <returns>The books list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.BooksController.CreateBook(System.Guid,System.Guid,Shared.DataTransferObjects.BookForCreationDto)">
+            <summary>
+            Creates a newly created book
+            </summary>
+            <param name="book"></param>
+            <returns>A newly created book</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.CategoriesController.GetCategories">
+            <summary>
+            Gets the list of all categories
+            </summary>
+            <returns>The categories list</returns>
+        </member>
+        <member name="M:TheBookshelf.Presentation.Controllers.CategoriesController.CreateCategory(Shared.DataTransferObjects.CategoryForCreationDto)">
+            <summary>
+            Creates a newly created category
+            </summary>
+            <param name="category"></param>
+            <returns>A newly created category</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+    </members>
+</doc>

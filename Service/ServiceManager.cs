@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Entities.ConfigurationModels;
 using Entities.Models;
 using Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -21,7 +23,7 @@ namespace Service
         private readonly Lazy<IAuthenticationService> _authenticationService;
 
         public ServiceManager(IRepositoryManager repositoryManager,ILoggerManager logger,IMapper mapper,
-            IBookLinks bookLinks, UserManager<User> userManager, IConfiguration configuration)
+            IBookLinks bookLinks, UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
         {
             _authorService = new Lazy<IAuthorService>(()=>new AuthorService(repositoryManager,logger, mapper));
             _bookService=new Lazy<IBookService>(()=>new  BookService(repositoryManager,logger, mapper, bookLinks));

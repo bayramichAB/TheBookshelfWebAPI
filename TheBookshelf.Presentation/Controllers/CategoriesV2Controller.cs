@@ -11,6 +11,7 @@ namespace TheBookshelf.Presentation.Controllers
     [ApiVersion("2.0")]
     [Route("api/categories")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v2")]
     public class CategoriesV2Controller : ControllerBase
     {
         private readonly IServiceManager _service;
