@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -51,6 +52,7 @@ namespace TheBookshelf.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto author)
         {
             if (!ModelState.IsValid)
@@ -60,6 +62,7 @@ namespace TheBookshelf.Presentation.Controllers
             return CreatedAtRoute("AuthorById",new {id=createdAuthor.Id},createdAuthor);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id:guid}")]
         public async Task <IActionResult> DeleteAuthor(Guid id)
         {
@@ -67,6 +70,7 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody] AuthorForUpdateDto author)

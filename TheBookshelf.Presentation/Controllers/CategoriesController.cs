@@ -80,13 +80,15 @@ namespace TheBookshelf.Presentation.Controllers
             return CreatedAtRoute("CategoryById", new {id=createdCategory.Id},createdCategory);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost("collection")]
         public async Task<IActionResult> CreateCategoryCollection([FromBody] IEnumerable<CategoryForCreationDto> categoryCollection)
         {
             var result = await _service.CategoryService.CreateCategoryCollectionAsync(categoryCollection);
             return CreatedAtRoute("CategoryCollection", new { result.ids }, result.categories);
         }
-        
+
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryForUpdateDto category)

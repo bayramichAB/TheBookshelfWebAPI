@@ -1,4 +1,5 @@
 ﻿using Entities.LinkModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -135,6 +136,7 @@ namespace TheBookshelf.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CreateBook(Guid categoryId,Guid authorId, [FromBody]BookForCreationDto book)
         {
             if (!ModelState.IsValid)
@@ -146,6 +148,7 @@ namespace TheBookshelf.Presentation.Controllers
         }
 
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
         public async Task<IActionResult> DeleteBookForCategoryAndAuthor(Guid categoryId, Guid authorId,Guid id)
         {
@@ -153,6 +156,7 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("api/categories/{categoryId}/authors/{authorId}/books/{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateBookForCategoryAndAuthor(Guid categoryId,Guid authorId,Guid id,
@@ -166,7 +170,7 @@ namespace TheBookshelf.Presentation.Controllers
             return NoContent();
         }
 
-
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("api/categories/{categoryId}/books/{id:guid}")]
         public async Task<IActionResult> PartiallyUpdateBookForCategory(Guid categoryId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
